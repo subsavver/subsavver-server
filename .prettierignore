@@ -1,0 +1,52 @@
+# Ignore artifacts:
+build
+dist
+tmp
+temp
+coverage
+
+# next.js
+.next
+out
+
+# Ignore version control system directories
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+
+# Ignore OS generated files
+Thumbs.db
+*.DS_Store
+
+# Ignore environment variable files
+*.env
+
+# Ignore lock files
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+*.log
+
+# Ignore editor directories and files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignore test coverage directory
+coverage
+
+# Miscellaneous
+*.iml
+*.class
+*.war
+*.jar
+*.exe
+*.dll
+*.pyc
+*.pyo
+*.pyd
