@@ -1,0 +1,34 @@
+GET http://localhost:8000
+
+###
+POST http://localhost:8000/api/auth/sign-up/email
+Content-Type: application/json
+
+{
+  "name": "SubSavver",
+  "email": "subsavver@gmail.com",
+  "password": "subsavver123"
+}
+
+###
+POST http://localhost:8000/api/auth/sign-in/email
+Content-Type: application/json
+
+{
+  "email": "subsavver@gmail.com",
+  "password": "subsavver123"
+}
+
+### Create User
+POST http://localhost:8000/api/auth/admin/create-user
+Content-Type: application/json
+
+{
+  "name": "Zahidul Haque",
+  "email": "zahidul.haque767@gmail.com",
+  "password": "zahid12345",
+  "role": "user"
+}
+
+###
+GET http://localhost:8000/api/auth/admin/list-users
