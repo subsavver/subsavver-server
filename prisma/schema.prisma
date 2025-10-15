@@ -14,6 +14,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+
+  @@map("subscription_status")
+}
+
+enum BillingCycle {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMI_ANNUALLY
+  ANNUALLY
+  CUSTOM
+
+  @@map("billing_cycle")
+}
+
 model User {
   id            String    @id
   name          String
@@ -24,6 +44,16 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+
+  role            String?
+  banned          Boolean?           @default(false)
+  banReason       String?
+  banExpires      DateTime?
+  subscriptions   UserSubscription[]
+  Reminder        Reminder[]
+  SpendingHistory SpendingHistory[]
+  UserAnalytics   UserAnalytics?
+  Payment         Payment[]
 
   @@unique([email])
   @@map("user")
@@ -39,6 +69,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@map("session")
@@ -72,4 +104,100 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+// Service Provider Model
+enum PlanType {
+  FREE
+  PRO
+}
+
+model SubscriptionService {
+  id        String             @id @default(uuid())
+  name      String             @unique
+  logo      String
+  category  String?
+  createdBy String // Admin ID
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  users     UserSubscription[]
+}
+
+model UserSubscription {
+  id          String   @id @default(uuid())
+  userId      String
+  serviceId   String
+  planName    String?
+  amount      Float
+  renewalDate DateTime
+  isActive    Boolean  @default(true)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User                @relation(fields: [userId], references: [id])
+  service      SubscriptionService @relation(fields: [serviceId], references: [id])
+  reminders    Reminder[]
+  spendingLogs SpendingHistory[]
+}
+
+model Reminder {
+  id               String    @id @default(uuid())
+  userId           String
+  subscriptionId   String
+  remindBeforeDays Int       @default(3)
+  sent             Boolean   @default(false)
+  sentAt           DateTime?
+  createdAt        DateTime  @default(now())
+
+  user         User             @relation(fields: [userId], references: [id])
+  subscription UserSubscription @relation(fields: [subscriptionId], references: [id])
+}
+
+model SpendingHistory {
+  id             String   @id @default(uuid())
+  userId         String
+  subscriptionId String
+  amount         Float
+  action         String // e.g. "renewal", "upgrade", "cancellation"
+  date           DateTime @default(now())
+
+  user         User             @relation(fields: [userId], references: [id])
+  subscription UserSubscription @relation(fields: [subscriptionId], references: [id])
+}
+
+model UserAnalytics {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  totalSubscriptions Int      @default(0)
+  totalSpent         Float    @default(0)
+  estimatedSavings   Float    @default(0)
+  lastCalculated     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Payment {
+  id            String          @id @default(uuid())
+  userId        String
+  amount        Float
+  currency      String          @default("USD")
+  paymentStatus PaymentStatus   @default(PENDING)
+  provider      PaymentProvider
+  transactionId String?
+  createdAt     DateTime        @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentProvider {
+  STRIPE
+  PAYPAL
+  MANUAL
 }
