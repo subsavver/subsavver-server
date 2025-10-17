@@ -116,6 +116,7 @@ model SubscriptionService {
   id        String             @id @default(uuid())
   name      String             @unique
   logo      String
+  company   String
   category  String?
   createdBy String // Admin ID
   createdAt DateTime           @default(now())

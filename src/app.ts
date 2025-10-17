@@ -3,7 +3,8 @@ import { toNodeHandler } from "better-auth/node";
 import { auth, Session } from "./lib/auth";
 import config from "./config/config";
 import routes from "./routes";
-import authMiddleware from "./middlewares/authMiddleware";
+import authenticate from "./middlewares/authenticate";
+import { errorHandler } from "./utils/errorHandler";
 
 declare global {
   namespace Express {
@@ -19,7 +20,7 @@ app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 // Middlewares
 app.use(express.json());
-app.use(authMiddleware);
+app.use(authenticate);
 
 // Routes
 app.get("/", (req, res) => {
@@ -37,5 +38,8 @@ app.get("/health", (_req: Request, res: Response) => {
     version: process.env.npm_package_version || "1.0.0",
   });
 });
+
+// Error handler
+app.use(errorHandler);
 
 export default app;

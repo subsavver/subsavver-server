@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { auth, Session } from "../lib/auth";
 
-const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session = await auth.api.getSession({
       headers: req.headers as Record<string, string>,
@@ -15,4 +15,4 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export default authMiddleware;
+export default authenticate;

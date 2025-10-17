@@ -1,3 +1,6 @@
+import { NextFunction, Request, Response } from "express";
+import config from "../config/config";
+
 export class AppError extends Error {
   public readonly statusCode: number;
   public readonly isOperational: boolean;
@@ -66,3 +69,21 @@ export class UnauthorizedError extends AppError {
     super(message, 401, true, "UNAUTHORIZED_ERROR");
   }
 }
+
+// Global error handler
+export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+      code: error.code,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  return res.status(500).json({
+    success: false,
+    message: config.isProduction ? "Internal server error" : error.message,
+    timestamp: new Date().toISOString(),
+  });
+};
