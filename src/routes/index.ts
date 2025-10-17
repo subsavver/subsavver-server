@@ -1,9 +1,14 @@
 import { Router } from "express";
+import subscriptionServiceRoute from "../modules/v1/subscription-service/subscription-service.route";
 
 const router: Router = Router();
 
 const apiVersions = {
   v1: [
+    {
+      path: "/subscription-services",
+      handler: subscriptionServiceRoute,
+    },
     {
       path: "/ai",
       handler: () => {},
