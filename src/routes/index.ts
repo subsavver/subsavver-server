@@ -1,5 +1,6 @@
 import { Router } from "express";
 import subscriptionServiceRoute from "../modules/v1/subscription-service/subscription-service.route";
+import subscriptionsRoute from "../modules/v1/subscriptions/subscriptions.route";
 
 const router: Router = Router();
 
@@ -23,7 +24,7 @@ const apiVersions = {
     },
     {
       path: "/subscriptions",
-      handler: () => {},
+      handler: subscriptionsRoute,
     },
     {
       path: "/payments",
