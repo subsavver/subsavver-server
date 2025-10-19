@@ -125,21 +125,24 @@ model SubscriptionService {
 }
 
 model UserSubscription {
-  id          String   @id @default(uuid())
-  userId      String
-  serviceId   String
-  planName    String?
-  amount      Float
-  renewalDate DateTime
-  isActive    Boolean  @default(true)
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String    @id @default(uuid())
+  userId          String
+  serviceId       String
+  planName        String?
+  amount          Float
+  renewalDate     DateTime
+  isActive        Boolean   @default(true)
+  notes           String?
+  lastPaymentDate DateTime?
+  nextPaymentDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   service      SubscriptionService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   reminders    Reminder[]
   spendingLogs SpendingHistory[]
+  Payment      Payment[]
 }
 
 model Reminder {
@@ -180,16 +183,46 @@ model UserAnalytics {
 }
 
 model Payment {
-  id            String          @id @default(uuid())
-  userId        String
-  amount        Float
-  currency      String          @default("USD")
-  paymentStatus PaymentStatus   @default(PENDING)
-  provider      PaymentProvider
-  transactionId String?
-  createdAt     DateTime        @default(now())
+  id              String          @id @default(uuid())
+  subscriptionId  String
+  userId          String
+  amount          Float
+  currency        Currency        @default(USD)
+  paymentStatus   PaymentStatus   @default(PENDING)
+  paymentProvider PaymentProvider @default(STRIPE)
+  isPaid          Boolean         @default(false)
+  paidAt          DateTime?
+  createdAt       DateTime        @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+}
+
+// Enums
+enum Currency {
+  USD
+  EUR
+  GBP
+  JPY
+  AUD
+  CAD
+  CHF
+  CNY
+  INR
+  NZD
+  SGD
+  ZAR
+  HKD
+  NOK
+  SEK
+  DKK
+  MXN
+  BRL
+  RUB
+  KRW
+  AED
+  SAR
+  BDT
 }
 
 enum PaymentStatus {
@@ -201,5 +234,14 @@ enum PaymentStatus {
 enum PaymentProvider {
   STRIPE
   PAYPAL
-  MANUAL
+  BRAINTREE
+  ADYEN
+  TWO_CHECKOUT
+  WORLDPAY
+  PAYONEER
+  APPLE_PAY
+  GOOGLE_PAY
+  ALIPAY
+  WECHAT_PAY
+  WISE
 }

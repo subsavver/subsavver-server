@@ -5,6 +5,7 @@ import config from "./config/config";
 import routes from "./routes";
 import authenticate from "./middlewares/authenticate";
 import { errorHandler } from "./utils/errorHandler";
+import "./jobs/reminder.cron";
 
 declare global {
   namespace Express {
