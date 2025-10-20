@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthorizationError, UnauthorizedError } from "../utils/errorHandler";
+import { UserRole } from "../generated/prisma";
 
-export const authorize = (allowedRoles: ("user" | "admin")[]) => {
+export const authorize = (allowedRoles: UserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = req.user;
@@ -9,7 +10,7 @@ export const authorize = (allowedRoles: ("user" | "admin")[]) => {
         throw new UnauthorizedError();
       }
 
-      if (!user.role || !allowedRoles.includes(user.role as "user" | "admin")) {
+      if (!user.role || !allowedRoles.includes(user.role as UserRole)) {
         throw new AuthorizationError();
       }
 

@@ -32,7 +32,13 @@ transporter.use(
 export const sendRemainderEmail = async (
   to: string,
   subject: string,
-  data: { name: string; serviceName: string; renewalDate: Date; dashboardLink: string }
+  data: {
+    name: string;
+    serviceName: string;
+    renewalDate: Date;
+    dashboardLink: string;
+    paymentLink: string;
+  }
 ) => {
   try {
     const mailOptions = {
