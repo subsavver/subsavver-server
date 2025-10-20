@@ -74,6 +74,7 @@ export class UnauthorizedError extends AppError {
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
+      status: error.statusCode,
       success: false,
       message: error.message,
       code: error.code,

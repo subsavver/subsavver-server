@@ -9,22 +9,22 @@ const router: Router = Router();
 
 router.use(authenticate);
 
-router.get("/", authorize(["admin"]), SubscriptionsController.getAllUserSubscriptions);
+router.get("/", authorize(["ADMIN"]), SubscriptionsController.getAllUserSubscriptions);
 
 router.post(
   "/",
-  authorize(["user"]),
+  authorize(["USER"]),
   validateBody(userSubscriptionSchema),
   SubscriptionsController.createUserSubscription
 );
 
 router.patch(
   "/:id",
-  authorize(["user"]),
+  authorize(["USER"]),
   validateBody(updateUserSubscriptionSchema),
   SubscriptionsController.updateUserSubscription
 );
 
-router.delete("/:id", authorize(["user"]), SubscriptionsController.deleteUserSubscription);
+router.delete("/:id", authorize(["USER"]), SubscriptionsController.deleteUserSubscription);
 
 export default router;

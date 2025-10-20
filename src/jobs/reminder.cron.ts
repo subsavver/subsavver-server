@@ -2,21 +2,16 @@ import cron from "node-cron";
 import { prisma } from "../lib/database";
 import { sendRemainderEmail } from "../lib/mailer";
 import config from "../config/config";
+import dayjs from "../lib/dayjs";
 
 // Run every second
-cron.schedule("0 */5 * * * *", async () => {
+cron.schedule("0 * * * * *", async () => {
   // console.log("🕒 Checking reminders...");
-  const now = new Date();
-  const nowInLocalTime = new Date(now.getTime() + 6 * 60 * 60 * 1000); // Add 6 hours for +06
-  // console.log("Current time (+06):", nowInLocalTime.toISOString());
 
   try {
     const upcomingReminders = await prisma.reminder.findMany({
       where: {
         sent: false,
-        notifyAt: {
-          lte: nowInLocalTime,
-        },
       },
       include: {
         user: true,
@@ -24,17 +19,19 @@ cron.schedule("0 */5 * * * *", async () => {
       },
     });
 
-    // console.log(`Found ${upcomingReminders.length} reminders to send`);
+    console.log(`Found ${upcomingReminders.length} reminders to send`);
 
     for (const reminder of upcomingReminders) {
       try {
-        const diffDays =
-          (reminder.subscription.renewalDate.getTime() - nowInLocalTime.getTime()) /
-          (1000 * 60 * 60 * 24);
+        const userTimezone = reminder.user.timezone || "UTC";
+        const nowUser = dayjs().tz(userTimezone);
+        const renewalDate = dayjs(reminder.subscription.renewalDate).tz(userTimezone);
+
+        const diffDays = renewalDate.diff(nowUser, "day", true);
+
+        // console.log(`Days until renewal for ${reminder.user.email}: ${diffDays}`);
 
         if (diffDays <= reminder.remindBeforeDays && diffDays > 0) {
-          const { user, subscription } = reminder;
-          console.log(`Sending reminder to ${user.email} for ${subscription.service.name}`);
           await sendRemainderEmail(
             reminder.user.email,
             `Your ${reminder.subscription.service.name} subscription renews soon`,
@@ -43,6 +40,7 @@ cron.schedule("0 */5 * * * *", async () => {
               serviceName: reminder.subscription.planName as string,
               renewalDate: reminder.subscription.renewalDate,
               dashboardLink: `${config.frontendUrl}/dashboard/manage`,
+              paymentLink: `${config.frontendUrl}/dashboard/payments/${reminder.subscription.id}`,
             }
           );
           await prisma.reminder.update({
@@ -51,7 +49,7 @@ cron.schedule("0 */5 * * * *", async () => {
             },
             data: {
               sent: true,
-              sentAt: nowInLocalTime,
+              sentAt: new Date(),
             },
           });
         }

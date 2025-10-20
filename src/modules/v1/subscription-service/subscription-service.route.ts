@@ -13,7 +13,7 @@ router.get("/", SubscriptionServiceController.getAllSubscriptionService);
 
 router.post(
   "/",
-  authorize(["admin"]),
+  authorize(["ADMIN"]),
   validateBody(createSubscriptionServiceSchema),
   SubscriptionServiceController.createSubscriptionService
 );
@@ -22,13 +22,13 @@ router.get("/:serviceId", SubscriptionServiceController.getSubscriptionServiceBy
 
 router.patch(
   "/:serviceId",
-  authorize(["admin"]),
+  authorize(["ADMIN"]),
   SubscriptionServiceController.updateSubscriptionService
 );
 
 router.delete(
   "/:serviceId",
-  authorize(["admin"]),
+  authorize(["ADMIN"]),
   SubscriptionServiceController.deleteSubscriptionService
 );
 
