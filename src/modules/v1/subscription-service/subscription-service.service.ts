@@ -17,7 +17,7 @@ const createService = async (body: CreateSubscriptionData, userId: string) => {
         name: body.name,
         logo: body.logo,
         company: body.company,
-        category: body.category,
+        categoryId: body.category,
         createdBy: userId,
       },
     });
@@ -72,7 +72,7 @@ const updateService = async (id: string, body: CreateSubscriptionData) => {
         name: body.name,
         logo: body.logo,
         company: body.company,
-        category: body.category,
+        categoryId: body.category,
       },
     });
 
