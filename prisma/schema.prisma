@@ -120,22 +120,35 @@ enum PlanType {
   PRO
 }
 
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscriptions       UserSubscription[]
+  subscriptionService SubscriptionService[]
+}
+
 model SubscriptionService {
-  id        String             @id @default(uuid())
-  name      String             @unique
-  logo      String
-  company   String
-  category  String?
-  createdBy String // Admin ID
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  users     UserSubscription[]
+  id         String             @id @default(uuid())
+  name       String             @unique
+  logo       String
+  company    String
+  categoryId String?
+  createdBy  String // Admin ID
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  users      UserSubscription[]
+  category   Category?          @relation(fields: [categoryId], references: [id])
 }
 
 model UserSubscription {
   id              String    @id @default(uuid())
   userId          String
   serviceId       String
+  categoryId      String?
   planName        String?
   amount          Float
   renewalDate     DateTime
@@ -151,6 +164,7 @@ model UserSubscription {
   reminders    Reminder[]
   spendingLogs SpendingHistory[]
   Payment      Payment[]
+  Category     Category?           @relation(fields: [categoryId], references: [id])
 }
 
 model Reminder {
