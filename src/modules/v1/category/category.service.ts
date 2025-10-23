@@ -3,10 +3,21 @@ import { CreateCategoryInput } from "./category.validation";
 
 const getCategories = async () => {
   const categories = await prisma.category.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
+    include: {
+      subscriptionService: {
+        select: {
+          id: true,
+          name: true,
+          logo: true,
+          company: true,
+        },
+        orderBy: {
+          name: "asc",
+        },
+      },
+    },
+    orderBy: {
+      name: "asc",
     },
   });
 
