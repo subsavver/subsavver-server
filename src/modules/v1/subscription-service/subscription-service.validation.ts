@@ -4,7 +4,7 @@ export const createSubscriptionServiceSchema = z.object({
   name: z.string().min(1, "Name is required"),
   logo: z.string().min(1, "Logo is required"),
   company: z.string().min(1, "Company is required"),
-  category: z.string().optional().default("Other"),
+  category: z.string().min(1, "Category ID is required"),
 });
 
 export const getSubscriptionServiceByIdSchema = z.object({
