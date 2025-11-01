@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { auth, Session } from "./lib/auth";
 import config from "./config/config";
@@ -18,10 +19,18 @@ declare global {
 
 const app: Express = express();
 
+// Middlewares
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 
-// Middlewares
-app.use(express.json());
 app.use(authenticate);
 
 // Routes
