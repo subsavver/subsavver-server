@@ -13,7 +13,7 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
   },
-  trustedOrigins: [process.env.FRONTEND_URL as string],
+  trustedOrigins: [process.env.FRONTEND_URL as string, "http://192.168.0.103:3000"],
   plugins: [
     admin({
       defaultRole: "user",

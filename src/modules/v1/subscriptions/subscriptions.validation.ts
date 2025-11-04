@@ -2,6 +2,7 @@ import z from "zod";
 
 export const userSubscriptionSchema = z.object({
   serviceId: z.string().min(1, "Service ID is required"),
+  categoryId: z.string().min(1, "Category ID is required"),
   planName: z.string().min(1, "Plan name is required"),
   amount: z.number().min(1, "Amount is required"),
   renewalDate: z.preprocess(
