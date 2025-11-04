@@ -11,6 +11,8 @@ router.use(authenticate);
 
 router.get("/", authorize(["ADMIN"]), SubscriptionsController.getAllUserSubscriptions);
 
+router.get("/user", authorize(["USER"]), SubscriptionsController.getUserSubscriptions);
+
 router.post(
   "/",
   authorize(["USER"]),

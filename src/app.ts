@@ -22,7 +22,7 @@ const app: Express = express();
 // Middlewares
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: [process.env.FRONTEND_URL as string, "http://192.168.0.103:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

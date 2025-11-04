@@ -163,8 +163,8 @@ model UserSubscription {
   service      SubscriptionService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   reminders    Reminder[]
   spendingLogs SpendingHistory[]
-  Payment      Payment[]
-  Category     Category?           @relation(fields: [categoryId], references: [id])
+  payment      Payment[]
+  category     Category?           @relation(fields: [categoryId], references: [id])
 }
 
 model Reminder {

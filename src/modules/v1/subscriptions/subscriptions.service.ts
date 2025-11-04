@@ -1,7 +1,7 @@
 import { prisma } from "../../../lib/database";
 import { UpdateUserSubscription, UserSubscription } from "./subscriptions.validation";
 
-const getUserSubscriptions = async () => {
+const getUsersSubscriptions = async () => {
   try {
     const subscriptions = await prisma.userSubscription.findMany({
       include: {
@@ -13,6 +13,35 @@ const getUserSubscriptions = async () => {
             emailVerified: true,
           },
         },
+      },
+    });
+
+    return subscriptions;
+  } catch (error: unknown) {
+    console.log(error);
+  }
+};
+
+const getUserSubscriptions = async (userId: string) => {
+  try {
+    const subscriptions = await prisma.userSubscription.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        service: {
+          select: {
+            name: true,
+          },
+        },
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -76,6 +105,7 @@ const deleteUserSubscription = async (subscriptionId: string, userId: string) =>
 };
 
 const SubscriptionsService = {
+  getUsersSubscriptions,
   getUserSubscriptions,
   createUserSubscription,
   updateUserSubscription,

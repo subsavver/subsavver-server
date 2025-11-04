@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../../../generated/prisma";
-import { InternalServerError, NotFoundError, UnauthorizedError } from "../../../utils/errorHandler";
+import {
+  ConflictError,
+  InternalServerError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../../../utils/errorHandler";
 import { prisma } from "../../../lib/database";
 import { REMIND_BEFORE_DAYS } from "../../../constants";
 import { UpdateUserSubscription, UserSubscription } from "./subscriptions.validation";
@@ -9,7 +14,7 @@ import SubscriptionsService from "./subscriptions.service";
 // Get all subscriptions
 const getAllUserSubscriptions = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const subscriptions = await SubscriptionsService.getUserSubscriptions();
+    const subscriptions = await SubscriptionsService.getUsersSubscriptions();
 
     if (!subscriptions) {
       throw new NotFoundError("No subscriptions found");
@@ -37,6 +42,18 @@ const createUserSubscription = async (req: Request, res: Response, next: NextFun
       throw new UnauthorizedError("User not authenticated");
     }
 
+    const existingSubscription = await prisma.userSubscription.findFirst({
+      where: {
+        userId: user.id,
+        planName: body.planName,
+        isActive: true,
+      },
+    });
+
+    if (existingSubscription) {
+      throw new ConflictError("Subscription already exists");
+    }
+
     const subscription = await SubscriptionsService.createUserSubscription(body, user.id);
 
     // Create default remainder
@@ -59,6 +76,33 @@ const createUserSubscription = async (req: Request, res: Response, next: NextFun
       status: 200,
       message: "Subscription created successfully",
       data: subscription,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+// Get User Subscriptions
+const getUserSubscriptions = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user as User;
+
+    if (!user) {
+      throw new UnauthorizedError("User not authenticated");
+    }
+
+    const subscriptions = await SubscriptionsService.getUserSubscriptions(user.id);
+
+    if (!subscriptions) {
+      throw new NotFoundError("No subscriptions found");
+    }
+
+    return res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Subscriptions fetched successfully",
+      data: subscriptions,
       timestamp: new Date().toISOString(),
     });
   } catch (error: unknown) {
@@ -149,6 +193,7 @@ const deleteUserSubscription = async (req: Request, res: Response, next: NextFun
 const SubscriptionsController = {
   getAllUserSubscriptions,
   createUserSubscription,
+  getUserSubscriptions,
   updateUserSubscription,
   deleteUserSubscription,
 };
