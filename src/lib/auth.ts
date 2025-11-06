@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { admin } from "better-auth/plugins";
+import { admin, customSession } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./database";
 
@@ -18,6 +18,24 @@ export const auth = betterAuth({
     admin({
       defaultRole: "user",
     }),
+    customSession(async ({ user, session }) => {
+      const userData = await prisma.user.findFirst({
+        where: {
+          id: user.id,
+        },
+        include: {
+          plan: true,
+        },
+      });
+
+      return {
+        ...session,
+        user: {
+          ...user,
+          plan: userData?.plan,
+        },
+      };
+    }),
   ],
   databaseHooks: {
     user: {
@@ -29,6 +47,23 @@ export const auth = betterAuth({
               role: "USER",
             },
           };
+        },
+        after: async (user) => {
+          const plan = await prisma.plan.findFirst({
+            where: {
+              type: "FREE",
+            },
+          });
+
+          await prisma.user.update({
+            where: {
+              id: user.id,
+              email: user.email,
+            },
+            data: {
+              planId: plan?.id,
+            },
+          });
         },
       },
     },

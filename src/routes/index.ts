@@ -3,6 +3,8 @@ import subscriptionServiceRoute from "../modules/v1/subscription-service/subscri
 import subscriptionsRoute from "../modules/v1/subscriptions/subscriptions.route";
 import paymentsRoute from "../modules/v1/payments/payment.route";
 import categoriesRoute from "../modules/v1/category/category.route";
+import planRoute from "../modules/v1/plan/plan.route";
+import usersRoute from "../modules/v1/users/users.route";
 
 const router: Router = Router();
 
@@ -26,7 +28,7 @@ const apiVersions = {
     },
     {
       path: "/users",
-      handler: () => {},
+      handler: usersRoute,
     },
     {
       path: "/subscriptions",
@@ -35,6 +37,10 @@ const apiVersions = {
     {
       path: "/payments",
       handler: paymentsRoute,
+    },
+    {
+      path: "/plans",
+      handler: planRoute,
     },
   ],
 };
