@@ -19,6 +19,7 @@ enum SubscriptionStatus {
   PAUSED
   CANCELLED
   EXPIRED
+  PENDING
 
   @@map("subscription_status")
 }
@@ -42,26 +43,30 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  timezone      String    @default("UTC")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id             String    @id
+  name           String
+  email          String
+  emailVerified  Boolean   @default(false)
+  image          String?
+  timezone       String    @default("UTC")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  planId         String?
+  subscriptionId String?
 
   role            UserRole           @default(USER)
   banned          Boolean?           @default(false)
   banReason       String?
   banExpires      DateTime?
   subscriptions   UserSubscription[]
-  Reminder        Reminder[]
-  SpendingHistory SpendingHistory[]
-  UserAnalytics   UserAnalytics?
-  Payment         Payment[]
+  reminder        Reminder[]
+  spendingHistory SpendingHistory[]
+  userAnalytics   UserAnalytics?
+  payment         Payment[]
+  plan            Plan?              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  subscription    Subscription?      @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@unique([email])
   @@map("user")
@@ -114,10 +119,47 @@ model Verification {
   @@map("verification")
 }
 
-// Service Provider Model
 enum PlanType {
   FREE
   PRO
+  PREMIUM
+
+  @@map("plan_type")
+}
+
+model Plan {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  price         Float
+  currency      Currency       @default(USD)
+  interval      String         @default("month")
+  includes      Json?
+  features      Json
+  isPopular     Boolean        @default(false)
+  users         User[]
+  type          PlanType       @default(FREE)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+
+  @@map("plan")
+}
+
+model Subscription {
+  id        String             @id @default(uuid())
+  userId    String
+  planId    String
+  status    SubscriptionStatus @default(ACTIVE)
+  startDate DateTime           @default(now())
+  endDate   DateTime?
+  cancelAt  DateTime?
+  stripeId  String
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  plan  Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  users User[]
 }
 
 model Category {
