@@ -11,6 +11,11 @@ interface Config {
     user: string;
     pass: string;
   };
+  cloudinary: {
+    cloudName: string;
+    apiKey: string;
+    apiSecret: string;
+  };
 }
 
 const env = process.env;
@@ -24,6 +29,11 @@ const config: Config = {
   gmail: {
     user: env.GMAIL_USER || "",
     pass: env.GMAIL_PASS || "",
+  },
+  cloudinary: {
+    cloudName: env.CLOUDINARY_CLOUD_NAME || "",
+    apiKey: env.CLOUDINARY_API_KEY || "",
+    apiSecret: env.CLOUDINARY_API_SECRET || "",
   },
 };
 
