@@ -33,6 +33,7 @@ export const auth = betterAuth({
         user: {
           ...user,
           plan: userData?.plan,
+          imagePublicId: userData?.imagePublicId,
         },
       };
     }),
@@ -70,6 +71,20 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "subsavver",
+  },
+  user: {
+    additionalFields: {
+      timezone: {
+        type: "string",
+        defaultValue: "UTC",
+        required: false,
+      },
+      imagePublicId: {
+        type: "string",
+        defaultValue: null,
+        required: false,
+      },
+    },
   },
 });
 

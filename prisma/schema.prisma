@@ -48,6 +48,7 @@ model User {
   email          String
   emailVerified  Boolean   @default(false)
   image          String?
+  imagePublicId  String?
   timezone       String    @default("UTC")
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now()) @updatedAt
