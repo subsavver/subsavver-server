@@ -110,6 +110,38 @@ const getUserSubscriptions = async (req: Request, res: Response, next: NextFunct
   }
 };
 
+const getUserSubscriptionById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params as { id: string };
+    const user = req.user as User;
+
+    if (!user) {
+      throw new UnauthorizedError("User not authenticated");
+    }
+
+    const subscription = await prisma.userSubscription.findFirst({
+      where: {
+        id,
+        userId: user.id,
+      },
+    });
+
+    if (!subscription) {
+      throw new NotFoundError("Subscription not found");
+    }
+
+    return res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Subscription fetched successfully",
+      data: subscription,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
 const updateUserSubscription = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params as { id: string };
@@ -194,6 +226,7 @@ const SubscriptionsController = {
   getAllUserSubscriptions,
   createUserSubscription,
   getUserSubscriptions,
+  getUserSubscriptionById,
   updateUserSubscription,
   deleteUserSubscription,
 };
