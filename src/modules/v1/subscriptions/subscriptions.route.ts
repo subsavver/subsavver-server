@@ -13,6 +13,8 @@ router.get("/", authorize(["ADMIN"]), SubscriptionsController.getAllUserSubscrip
 
 router.get("/user", authorize(["USER"]), SubscriptionsController.getUserSubscriptions);
 
+router.get("/:id", authorize(["USER"]), SubscriptionsController.getUserSubscriptionById);
+
 router.post(
   "/",
   authorize(["USER"]),
