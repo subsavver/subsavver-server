@@ -4,6 +4,7 @@ export const userSubscriptionSchema = z.object({
   serviceId: z.string().min(1, "Service ID is required"),
   categoryId: z.string().min(1, "Category ID is required"),
   planName: z.string().min(1, "Plan name is required"),
+  remindBeforeDays: z.string().min(1, "Remind before days is required"),
   amount: z.number().min(1, "Amount is required"),
   renewalDate: z.preprocess(
     (arg) => {
@@ -21,6 +22,7 @@ export const updateUserSubscriptionSchema = z.object({
   planName: z.string().min(1, "Plan name is required"),
   categoryId: z.string().min(1, "Category ID is required"),
   serviceId: z.string().min(1, "Service ID is required"),
+  remindBeforeDays: z.string().min(1, "Remind before days is required"),
   amount: z.number().min(1, "Amount is required"),
   isActive: z.boolean().optional(),
   renewalDate: z.preprocess(

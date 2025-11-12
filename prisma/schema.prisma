@@ -188,19 +188,20 @@ model SubscriptionService {
 }
 
 model UserSubscription {
-  id              String    @id @default(uuid())
-  userId          String
-  serviceId       String
-  categoryId      String?
-  planName        String?
-  amount          Float
-  renewalDate     DateTime
-  isActive        Boolean   @default(true)
-  notes           String?
-  lastPaymentDate DateTime?
-  nextPaymentDate DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id               String    @id @default(uuid())
+  userId           String
+  serviceId        String
+  categoryId       String?
+  planName         String?
+  amount           Float
+  renewalDate      DateTime
+  isActive         Boolean   @default(true)
+  remindBeforeDays Int       @default(3)
+  notes            String?
+  lastPaymentDate  DateTime?
+  nextPaymentDate  DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   service      SubscriptionService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
@@ -211,14 +212,13 @@ model UserSubscription {
 }
 
 model Reminder {
-  id               String    @id @default(uuid())
-  userId           String
-  subscriptionId   String
-  remindBeforeDays Int       @default(3)
-  notifyAt         DateTime?
-  sent             Boolean   @default(false)
-  sentAt           DateTime?
-  createdAt        DateTime  @default(now())
+  id             String    @id @default(uuid())
+  userId         String
+  subscriptionId String
+  notifyAt       DateTime?
+  sent           Boolean   @default(false)
+  sentAt         DateTime?
+  createdAt      DateTime  @default(now())
 
   user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscription UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)

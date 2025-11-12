@@ -10,6 +10,7 @@ import { prisma } from "../../../lib/database";
 import { REMIND_BEFORE_DAYS } from "../../../constants";
 import { UpdateUserSubscription, UserSubscription } from "./subscriptions.validation";
 import SubscriptionsService from "./subscriptions.service";
+import dayjs from "../../../lib/dayjs";
 
 // Get all subscriptions
 const getAllUserSubscriptions = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,16 +58,14 @@ const createUserSubscription = async (req: Request, res: Response, next: NextFun
     const subscription = await SubscriptionsService.createUserSubscription(body, user.id);
 
     // Create default remainder
-    const notifyAt = new Date(
-      new Date(subscription?.renewalDate as Date).getTime() -
-        REMIND_BEFORE_DAYS * 24 * 60 * 60 * 1000
-    );
+    const notifyAt = dayjs(body.renewalDate)
+      .subtract(Number(body.remindBeforeDays) || REMIND_BEFORE_DAYS, "day")
+      .toDate();
 
     await prisma.reminder.create({
       data: {
         userId: user.id,
         subscriptionId: subscription?.id as string,
-        remindBeforeDays: REMIND_BEFORE_DAYS,
         notifyAt,
       },
     });

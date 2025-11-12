@@ -56,6 +56,7 @@ const createUserSubscription = async (body: UserSubscription, userId: string) =>
     const createdSubscription = await prisma.userSubscription.create({
       data: {
         ...body,
+        remindBeforeDays: Number(body.remindBeforeDays),
         userId,
       },
     });
@@ -77,7 +78,10 @@ const updateUserSubscription = async (
         id: subscriptionId,
         userId,
       },
-      data,
+      data: {
+        ...data,
+        remindBeforeDays: Number(data.remindBeforeDays),
+      },
       include: {
         service: true,
       },

@@ -3,19 +3,31 @@ import { prisma } from "../lib/database";
 import { sendRemainderEmail } from "../lib/mailer";
 import config from "../config/config";
 import dayjs from "../lib/dayjs";
+import { getNextCycleDate } from "../helpers/dateCycle";
 
-// Run every second
-cron.schedule("0 * * * * *", async () => {
+// Run every 10 minutes
+cron.schedule("*/20 * * * * *", async () => {
+  const now = dayjs().utc();
   // console.log("🕒 Checking reminders...");
 
   try {
     const upcomingReminders = await prisma.reminder.findMany({
       where: {
         sent: false,
+        subscription: {
+          isActive: true,
+        },
+        notifyAt: {
+          lte: now.toDate(),
+        },
       },
       include: {
-        user: true,
-        subscription: { include: { service: true } },
+        subscription: {
+          include: {
+            service: true,
+            user: true,
+          },
+        },
       },
     });
 
@@ -23,22 +35,22 @@ cron.schedule("0 * * * * *", async () => {
 
     for (const reminder of upcomingReminders) {
       try {
-        const userTimezone = reminder.user.timezone || "UTC";
+        const user = reminder.subscription.user;
+        const userTimezone = user.timezone || "UTC";
         const nowUser = dayjs().tz(userTimezone);
-        const renewalDate = dayjs(reminder.subscription.renewalDate).tz(userTimezone);
-
-        const diffDays = renewalDate.diff(nowUser, "day", true);
+        const notifyAtUser = dayjs(reminder.notifyAt).tz(userTimezone);
 
         // console.log(`Days until renewal for ${reminder.user.email}: ${diffDays}`);
-
-        if (diffDays <= reminder.remindBeforeDays && diffDays > 0) {
+        if (nowUser.isAfter(notifyAtUser)) {
           await sendRemainderEmail(
-            reminder.user.email,
+            user.email,
             `Your ${reminder.subscription.service.name} subscription renews soon`,
             {
-              name: reminder.user.name || "there",
+              name: user.name || "there",
               serviceName: reminder.subscription.planName as string,
-              renewalDate: reminder.subscription.renewalDate,
+              renewalDate: dayjs(reminder.subscription.renewalDate)
+                .tz(userTimezone)
+                .format("DD/MM/YYYY"),
               dashboardLink: `${config.frontendUrl}/dashboard/manage`,
               paymentLink: `${config.frontendUrl}/dashboard/payments/${reminder.subscription.id}`,
             }
@@ -49,7 +61,19 @@ cron.schedule("0 * * * * *", async () => {
             },
             data: {
               sent: true,
-              sentAt: new Date(),
+              sentAt: nowUser.toDate(),
+            },
+          });
+
+          // 🌀 Calculate next cycle date
+          const nextPaymentDate = getNextCycleDate(reminder.subscription.renewalDate, "monthly");
+
+          await prisma.userSubscription.update({
+            where: {
+              id: reminder.subscriptionId,
+            },
+            data: {
+              nextPaymentDate,
             },
           });
         }
