@@ -35,7 +35,7 @@ export const sendRemainderEmail = async (
   data: {
     name: string;
     serviceName: string;
-    renewalDate: Date;
+    renewalDate: string;
     dashboardLink: string;
     paymentLink: string;
   }
