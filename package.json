@@ -2,9 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "build": "npx prisma generate && tsc",
+    "build": "npx prisma generate --no-engine && tsc && cp -r src/generated dist/generated && node dist/copyStatic.js",
     "start": "node dist/server.js",
     "dev": "nodemon --watch \"src/**/*.ts\" --exec ts-node src/server.ts",
     "lint": "eslint \"src/**/*.{ts,js}\"",
