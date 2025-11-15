@@ -16,6 +16,10 @@ interface Config {
     apiKey: string;
     apiSecret: string;
   };
+  redis: {
+    url: string;
+    password?: string;
+  };
 }
 
 const env = process.env;
@@ -34,6 +38,10 @@ const config: Config = {
     cloudName: env.CLOUDINARY_CLOUD_NAME || "",
     apiKey: env.CLOUDINARY_API_KEY || "",
     apiSecret: env.CLOUDINARY_API_SECRET || "",
+  },
+  redis: {
+    url: env.UPSTASH_REDIS_URL || "redis://localhost:6379",
+    password: env.UPSTASH_REDIS_PASS || "",
   },
 };
 
