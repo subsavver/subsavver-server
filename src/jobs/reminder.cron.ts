@@ -4,7 +4,7 @@ import { prisma } from "../lib/database";
 import { reminderQueue } from "../queues/reminder.queue";
 
 // Run every 10 minutes
-cron.schedule("*/20 * * * * *", async () => {
+cron.schedule("*/10 * * * *", async () => {
   const now = dayjs().utc();
   // console.log("🕒 Checking reminders...");
 

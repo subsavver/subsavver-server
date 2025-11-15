@@ -3,66 +3,48 @@ import { prisma } from "../lib/database";
 import { REMIND_BEFORE_DAYS } from "../constants";
 import dayjs from "../lib/dayjs";
 
-cron.schedule("0 * * * * *", async () => {
+cron.schedule("*/10 * * * *", async () => {
   try {
-    const now = dayjs().utc();
-    const upcomingPayments = await prisma.userSubscription.findMany({
+    const activeSubscriptions = await prisma.userSubscription.findMany({
       where: {
-        renewalDate: {
-          gte: now.toDate(),
-          lte: now.add(REMIND_BEFORE_DAYS, "day").toDate(),
-        },
+        isActive: true,
       },
       include: {
         user: true,
       },
     });
 
-    for (const subscription of upcomingPayments) {
-      const existingPaidPayment = await prisma.payment.findFirst({
-        where: {
-          subscriptionId: subscription.id,
-          paymentStatus: "SUCCESS",
-          isPaid: true,
-        },
-      });
+    for (const subscription of activeSubscriptions) {
+      const user = subscription.user;
+      const userTimezone = user.timezone || "UTC";
 
-      if (existingPaidPayment) {
-        // console.log(
-        //   `⏩ Subscription ${subscription.id} already has a successful payment, skipping...`
-        // );
-        continue;
-      }
+      const nowUser = dayjs().tz(userTimezone);
+      const renewalUser = dayjs(subscription.renewalDate).tz(userTimezone);
 
-      const existingPending = await prisma.payment.findFirst({
-        where: {
-          subscriptionId: subscription.id,
-          paymentStatus: "PENDING",
-          isPaid: false,
-          createdAt: {
-            gte: now.subtract(1, "day").toDate(),
-            lt: now.toDate(),
+      const diffDays = renewalUser.diff(nowUser, "day", true);
+
+      if (diffDays <= REMIND_BEFORE_DAYS && diffDays >= 0) {
+        const existingPayment = await prisma.payment.findFirst({
+          where: {
+            subscriptionId: subscription.id,
+            paymentStatus: "PENDING",
           },
-        },
-      });
+        });
 
-      if (existingPending) {
-        // console.log(`⏩ Pending payment already exists for ${subscription.id}, skipping...`);
-        continue;
+        if (existingPayment) continue;
+
+        await prisma.payment.create({
+          data: {
+            userId: subscription.userId,
+            subscriptionId: subscription.id,
+            amount: subscription.amount,
+            currency: "USD",
+            paymentStatus: "PENDING",
+          },
+        });
       }
-
-      await prisma.payment.create({
-        data: {
-          userId: subscription.userId,
-          subscriptionId: subscription.id,
-          amount: subscription.amount,
-          currency: "USD",
-          paymentStatus: "PENDING",
-        },
-      });
-      console.log(`✅ Creating payment for ${subscription.id}`);
     }
   } catch (error: unknown) {
-    console.log("Failed to process reminders:", error);
+    console.log("Failed to process timezone-based payments:", error);
   }
 });
