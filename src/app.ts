@@ -8,6 +8,7 @@ import authenticate from "./middlewares/authenticate";
 import { errorHandler } from "./utils/errorHandler";
 import "./jobs/payment.cron";
 import "./jobs/reminder.cron";
+import "./workers/reminder.worker";
 
 declare global {
   namespace Express {

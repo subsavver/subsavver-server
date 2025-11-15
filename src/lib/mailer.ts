@@ -50,12 +50,12 @@ export const sendRemainderEmail = async (
     };
     const info = await transporter.sendMail(mailOptions);
 
-    if (info.rejected.length > 0) {
-      console.log("Email sending failed to: ", info.rejected);
-      throw new Error(`Email sending failed to: ${info.rejected.join(", ")}`);
-    } else {
+    if (info.rejected.length === 0 && info.accepted.length > 0) {
       console.log("✅ Email sent successfully to: ", to);
-      // console.log("Message ID: ", info.messageId);
+      return true;
+    } else {
+      console.log("Email sending failed to: ", info.rejected);
+      return false;
     }
   } catch (error: unknown) {
     console.log("❌ Failed to send email: ", error);
