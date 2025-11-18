@@ -3,8 +3,6 @@ import { admin, customSession } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./database";
 
-// export const prisma = new PrismaClient();
-
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -88,4 +86,4 @@ export const auth = betterAuth({
   },
 });
 
-export type Session = typeof auth.$Infer.Session;
+export type UserType = typeof auth.$Infer.Session;
