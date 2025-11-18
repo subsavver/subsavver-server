@@ -50,7 +50,7 @@ const createPayment = async (req: Request, res: Response, next: NextFunction) =>
 
 const getUserPayments = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user.id as string;
+    const userId = req.user?.id as string;
 
     const payments = await PaymentService.getUserPayments(userId);
 

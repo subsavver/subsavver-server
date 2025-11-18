@@ -30,7 +30,7 @@ const getAllSubscriptionService = async (req: Request, res: Response, next: Next
 // Create subscription service
 const createSubscriptionService = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.id as string;
     const body = req.body as CreateSubscriptionServiceInput;
 
     const existingService = await SubscriptionService.findByName(body.name);

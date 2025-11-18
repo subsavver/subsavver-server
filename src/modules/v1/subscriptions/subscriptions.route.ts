@@ -1,7 +1,7 @@
 import { Router } from "express";
 import SubscriptionsController from "./subscriptions.controller";
 import authenticate from "../../../middlewares/authenticate";
-import { authorize } from "../../../middlewares/roleMiddleware";
+import { authorize, checkSubscriptionLimit } from "../../../middlewares/roleMiddleware";
 import { validateBody } from "../../../middlewares/validation";
 import { updateUserSubscriptionSchema, userSubscriptionSchema } from "./subscriptions.validation";
 
@@ -18,6 +18,7 @@ router.get("/:id", authorize(["USER"]), SubscriptionsController.getUserSubscript
 router.post(
   "/",
   authorize(["USER"]),
+  checkSubscriptionLimit(),
   validateBody(userSubscriptionSchema),
   SubscriptionsController.createUserSubscription
 );

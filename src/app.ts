@@ -1,7 +1,8 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
-import { auth, Session } from "./lib/auth";
+import { auth } from "./lib/auth";
+import { User } from "./typescript";
 import config from "./config/config";
 import routes from "./routes";
 import authenticate from "./middlewares/authenticate";
@@ -13,7 +14,7 @@ import "./workers/reminder.worker";
 declare global {
   namespace Express {
     interface Request {
-      user?: Session["user"];
+      user?: User;
     }
   }
 }
