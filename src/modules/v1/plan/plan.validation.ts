@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { Currency } from "../../../generated/prisma";
+import { Currency } from "../../../generated/client";
 
 export const createPlanSchema = z.object({
   name: z.string().min(1, "Name is required"),
