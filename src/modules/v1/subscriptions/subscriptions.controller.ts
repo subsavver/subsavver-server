@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../../../generated/prisma";
+import { User } from "../../../generated/client";
 import {
   ConflictError,
   InternalServerError,

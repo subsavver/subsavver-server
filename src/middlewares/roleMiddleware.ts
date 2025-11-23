@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthorizationError, UnauthorizedError } from "../utils/errorHandler";
-import { UserRole } from "../generated/prisma";
+import { UserRole } from "../generated/client";
 import { PLAN_PERMISSIONS, ROLE_PERMISSIONS } from "../config/rbac";
 import config from "../config/config";
 import { prisma } from "../lib/database";

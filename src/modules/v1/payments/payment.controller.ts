@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import PaymentService from "./payment.service";
 import { NotFoundError } from "../../../utils/errorHandler";
-import { User } from "../../../generated/prisma";
+import { User } from "../../../generated/client";
 
 const getAllPayments = async (req: Request, res: Response, next: NextFunction) => {
   try {

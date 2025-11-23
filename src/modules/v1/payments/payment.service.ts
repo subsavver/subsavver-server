@@ -1,4 +1,4 @@
-import { PaymentStatus } from "../../../generated/prisma";
+import { PaymentStatus } from "../../../generated/client";
 import { prisma } from "../../../lib/database";
 import { CreatePaymentInput } from "./payment.validation";
 import dayjs from "../../../lib/dayjs";
