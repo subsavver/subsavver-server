@@ -79,7 +79,7 @@ export const auth = betterAuth({
       },
       imagePublicId: {
         type: "string",
-        defaultValue: null,
+        defaultValue: "",
         required: false,
       },
     },

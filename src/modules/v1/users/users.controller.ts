@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { deleteImageFromCloudinary, uploadToCloudinary } from "../../../helpers/cloudinary-helper";
-import { User } from "../../../generated/prisma";
+import { User } from "../../../generated/client";
 import UsersService from "./users.service";
 
 const uploadProfileImage = async (req: Request, res: Response, next: NextFunction) => {

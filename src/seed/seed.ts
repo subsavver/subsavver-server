@@ -1,6 +1,11 @@
-import { PrismaClient } from "../src/generated/prisma";
+import { PrismaClient } from "../generated/client";
+import "dotenv/config";
+import { auth } from "../lib/auth";
+import { categories } from "./seed-data";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.DATABASE_URL!,
+});
 
 async function main() {
   console.log("🌱 Seeding database...");
@@ -41,26 +46,48 @@ async function main() {
 
     console.log("✅ Free Plan seeded:", freePlan.name);
 
-    const admin = await prisma.user.upsert({
-      where: {
-        email: "subsavver@gmail.com",
-      },
-      update: {},
-      create: {
-        id: "admin",
+    const admin = await auth.api.signUpEmail({
+      body: {
         name: "SubSavver",
         email: "subsavver@gmail.com",
-        emailVerified: true,
-        role: "ADMIN",
-        plan: { connect: { id: freePlan.id } },
-        banned: false,
-        timezone: "UTC",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        password: "123456789",
+        callbackURL: "",
+        rememberMe: false,
+      } as {
+        name: string;
+        email: string;
+        password: string;
+        callbackURL: string;
+        rememberMe: boolean;
       },
     });
 
-    console.log("✅ Admin user seeded:", admin.email);
+    console.log("✅ Admin user seeded:", admin.user.name);
+
+    for (const category of categories) {
+      const createdCategory = await prisma.category.create({
+        data: {
+          name: category.name,
+          description: category.description,
+        },
+      });
+
+      for (const service of category.services) {
+        await prisma.subscriptionService.create({
+          data: {
+            name: service.name,
+            logo: service.logo,
+            company: service.company,
+            categoryId: createdCategory.id,
+            createdBy: admin.user.id,
+          },
+        });
+
+        console.log("✅ Service seeded");
+      }
+
+      console.log("✅ Category seeded");
+    }
 
     console.log("🎉 Seeding completed successfully!");
   } catch (error: unknown) {

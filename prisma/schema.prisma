@@ -1,150 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client"
+  output   = "../src/generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  PAUSED
-  CANCELLED
-  EXPIRED
-  PENDING
-
-  @@map("subscription_status")
-}
-
-enum BillingCycle {
-  WEEKLY
-  MONTHLY
-  QUARTERLY
-  SEMI_ANNUALLY
-  ANNUALLY
-  CUSTOM
-
-  @@map("billing_cycle")
-}
-
-enum UserRole {
-  USER
-  ADMIN
-
-  @@map("user_role")
-}
-
-model User {
-  id             String    @id
-  name           String
-  email          String
-  emailVerified  Boolean   @default(false)
-  image          String?
-  imagePublicId  String?
-  timezone       String    @default("UTC")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now()) @updatedAt
-  sessions       Session[]
-  accounts       Account[]
-  planId         String?
-  subscriptionId String?
-
-  role            UserRole           @default(USER)
-  banned          Boolean?           @default(false)
-  banReason       String?
-  banExpires      DateTime?
-  subscriptions   UserSubscription[]
-  reminder        Reminder[]
-  spendingHistory SpendingHistory[]
-  userAnalytics   UserAnalytics?
-  payment         Payment[]
-  plan            Plan?              @relation(fields: [planId], references: [id], onDelete: Cascade)
-  subscription    Subscription?      @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-
-  @@unique([email])
-  @@map("user")
-}
-
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  impersonatedBy String?
-
-  @@unique([token])
-  @@map("session")
-}
-
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@map("account")
-}
-
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  @@map("verification")
-}
-
-enum PlanType {
-  FREE
-  PRO
-  PREMIUM
-
-  @@map("plan_type")
-}
-
-model Plan {
-  id            String         @id @default(uuid())
-  name          String         @unique
-  price         Float
-  currency      Currency       @default(USD)
-  interval      String         @default("month")
-  includes      Json?
-  features      Json
-  isPopular     Boolean        @default(false)
-  users         User[]
-  type          PlanType       @default(FREE)
-  isActive      Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  subscriptions Subscription[]
-
-  @@map("plan")
 }
 
 model Subscription {
@@ -158,20 +18,22 @@ model Subscription {
   stripeId  String
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
+  plan      Plan               @relation(fields: [planId], references: [id], onDelete: Cascade)
+  user      User[]
 
-  plan  Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
-  users User[]
+  @@map("subscription")
 }
 
 model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  subscriptions       UserSubscription[]
+  id                  String                @id @default(uuid())
+  name                String                @unique
+  description         String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
   subscriptionService SubscriptionService[]
+  subscriptions       UserSubscription[]
+
+  @@map("category")
 }
 
 model SubscriptionService {
@@ -179,61 +41,67 @@ model SubscriptionService {
   name       String             @unique
   logo       String
   company    String
-  categoryId String?
-  createdBy  String // Admin ID
+  createdBy  String
   createdAt  DateTime           @default(now())
   updatedAt  DateTime           @updatedAt
-  users      UserSubscription[]
+  categoryId String?
   category   Category?          @relation(fields: [categoryId], references: [id])
+  users      UserSubscription[]
+
+  @@map("subscription_service")
 }
 
 model UserSubscription {
-  id               String    @id @default(uuid())
+  id               String              @id @default(uuid())
   userId           String
   serviceId        String
-  categoryId       String?
   planName         String?
   amount           Float
   renewalDate      DateTime
-  isActive         Boolean   @default(true)
-  remindBeforeDays Int       @default(3)
+  isActive         Boolean             @default(true)
   notes            String?
   lastPaymentDate  DateTime?
   nextPaymentDate  DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  categoryId       String?
+  remindBeforeDays Int                 @default(3)
+  payment          Payment[]
+  reminders        Reminder[]
+  spendingLogs     SpendingHistory[]
+  category         Category?           @relation(fields: [categoryId], references: [id])
+  service          SubscriptionService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  service      SubscriptionService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  reminders    Reminder[]
-  spendingLogs SpendingHistory[]
-  payment      Payment[]
-  category     Category?           @relation(fields: [categoryId], references: [id])
+  @@map("user_subscription")
 }
 
 model Reminder {
-  id             String    @id @default(uuid())
+  id             String           @id @default(uuid())
   userId         String
   subscriptionId String
   notifyAt       DateTime?
-  sent           Boolean   @default(false)
+  sent           Boolean          @default(false)
   sentAt         DateTime?
-  createdAt      DateTime  @default(now())
+  createdAt      DateTime         @default(now())
+  channel        ReminderChannel  @default(EMAIL)
+  subscription   UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subscription UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  @@map("reminder")
 }
 
 model SpendingHistory {
-  id             String   @id @default(uuid())
+  id             String           @id @default(uuid())
   userId         String
   subscriptionId String
   amount         Float
-  action         String // e.g. "renewal", "upgrade", "cancellation"
-  date           DateTime @default(now())
+  action         String
+  date           DateTime         @default(now())
+  subscription   UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subscription UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  @@map("spending_history")
 }
 
 model UserAnalytics {
@@ -243,27 +111,121 @@ model UserAnalytics {
   totalSpent         Float    @default(0)
   estimatedSavings   Float    @default(0)
   lastCalculated     DateTime @default(now())
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("user_analytic")
 }
 
 model Payment {
-  id              String          @id @default(uuid())
+  id              String           @id @default(uuid())
   subscriptionId  String
   userId          String
   amount          Float
-  currency        Currency        @default(USD)
-  paymentStatus   PaymentStatus   @default(PENDING)
-  paymentProvider PaymentProvider @default(STRIPE)
-  isPaid          Boolean         @default(false)
+  currency        Currency         @default(USD)
+  paymentStatus   PaymentStatus    @default(PENDING)
+  paymentProvider PaymentProvider  @default(STRIPE)
+  isPaid          Boolean          @default(false)
   paidAt          DateTime?
-  createdAt       DateTime        @default(now())
+  createdAt       DateTime         @default(now())
+  subscription    UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subscription UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  @@map("payment")
 }
 
-// Enums
+model User {
+  id              String             @id @default(uuid())
+  name            String
+  email           String             @unique
+  emailVerified   Boolean            @default(false)
+  image           String?            @default("")
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @default(now())
+  banned          Boolean?           @default(false)
+  banReason       String?            @default("")
+  banExpires      DateTime?          @default(now())
+  timezone        String             @default("UTC")
+  role            UserRole           @default(USER)
+  planId          String?            @default("")
+  subscriptionId  String?            @default("")
+  imagePublicId   String?            @default("")
+  payment         Payment[]
+  reminder        Reminder[]
+  spendingHistory SpendingHistory[]
+  userAnalytics   UserAnalytics?
+  subscriptions   UserSubscription[]
+  account         Account[]
+  session         Session[]
+  plan            Plan?              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  Subscription    Subscription?      @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("user")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Plan {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  price         Float
+  currency      Currency       @default(USD)
+  interval      String         @default("month")
+  features      Json
+  type          PlanType       @default(FREE)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  isActive      Boolean        @default(true)
+  includes      Json?
+  isPopular     Boolean        @default(false)
+  subscriptions Subscription[]
+  user          User[]
+
+  @@map("plan")
+}
+
+model Session {
+  id             String   @id @default(uuid())
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  @@map("verification")
+}
+
 enum Currency {
   USD
   EUR
@@ -309,4 +271,38 @@ enum PaymentProvider {
   ALIPAY
   WECHAT_PAY
   WISE
+}
+
+enum ReminderChannel {
+  EMAIL
+  SMS
+  WHATSAPP
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum BillingCycle {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMI_ANNUALLY
+  ANNUALLY
+  CUSTOM
+}
+
+enum PlanType {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+  PENDING
 }
