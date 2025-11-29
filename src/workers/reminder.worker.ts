@@ -5,6 +5,7 @@ import { sendRemainderEmail } from "../lib/mailer";
 import { getNextCycleDate } from "../helpers/dateCycle";
 import dayjs from "../lib/dayjs";
 import config from "../config/config";
+import { createPaymentToken } from "../helpers/generate-token";
 
 async function createWorker() {
   const worker = new Worker(
@@ -30,6 +31,8 @@ async function createWorker() {
       const user = reminder.subscription.user;
       const userTimezone = user.timezone || "UTC";
 
+      const token = createPaymentToken(reminder.subscriptionId, user.id);
+
       const send = await sendRemainderEmail(
         user.email,
         `Your ${reminder.subscription.service.name} subscription renews soon`,
@@ -40,7 +43,7 @@ async function createWorker() {
             .tz(userTimezone)
             .format("DD/MM/YYYY"),
           dashboardLink: `${config.frontendUrl}/dashboard/manage`,
-          paymentLink: `${config.frontendUrl}/dashboard/payments/${reminder.subscription.id}`,
+          paymentLink: `${config.backendUrl}/api/v1/payments/mark-as-paid?token=${token}`,
         }
       );
 

@@ -24,6 +24,16 @@ cron.schedule("*/10 * * * *", async () => {
       const diffDays = renewalUser.diff(nowUser, "day", true);
 
       if (diffDays <= REMIND_BEFORE_DAYS && diffDays >= 0) {
+        const paidPayments = await prisma.payment.findFirst({
+          where: {
+            subscriptionId: subscription.id,
+            isPaid: true,
+            paymentStatus: "SUCCESS",
+          },
+        });
+
+        if (paidPayments) continue;
+
         const existingPayment = await prisma.payment.findFirst({
           where: {
             subscriptionId: subscription.id,

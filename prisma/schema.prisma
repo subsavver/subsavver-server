@@ -138,17 +138,17 @@ model User {
   name            String
   email           String             @unique
   emailVerified   Boolean            @default(false)
-  image           String?            @default("")
+  image           String?
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @default(now())
   banned          Boolean?           @default(false)
-  banReason       String?            @default("")
+  banReason       String?
   banExpires      DateTime?          @default(now())
   timezone        String             @default("UTC")
   role            UserRole           @default(USER)
-  planId          String?            @default("")
-  subscriptionId  String?            @default("")
-  imagePublicId   String?            @default("")
+  planId          String?
+  subscriptionId  String?
+  imagePublicId   String?
   payment         Payment[]
   reminder        Reminder[]
   spendingHistory SpendingHistory[]

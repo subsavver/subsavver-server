@@ -1,7 +1,9 @@
+import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import PaymentService from "./payment.service";
 import { NotFoundError } from "../../../utils/errorHandler";
 import { User } from "../../../generated/client";
+import config from "../../../config/config";
 
 const getAllPayments = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -51,8 +53,9 @@ const createPayment = async (req: Request, res: Response, next: NextFunction) =>
 const getUserPayments = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id as string;
+    const page = Number(req.query.page ?? 1) as number;
 
-    const payments = await PaymentService.getUserPayments(userId);
+    const payments = await PaymentService.getUserPayments(userId, page);
 
     if (!payments) {
       throw new NotFoundError("No payments found for this user");
@@ -62,7 +65,8 @@ const getUserPayments = async (req: Request, res: Response, next: NextFunction) 
       success: true,
       status: 200,
       message: "Payments fetched successfully",
-      data: payments,
+      data: payments.data,
+      meta: payments.meta,
       timestamp: new Date().toISOString(),
     });
   } catch (error: unknown) {
@@ -94,9 +98,11 @@ const getPaymentById = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-const markPaymentAsPaid = async (req: Request, res: Response, next: NextFunction) => {
+const confirmPayment = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const paymentId = req.params.paymentId;
+    const paymentId = req.query.id as string;
+
+    console.log("payment id", paymentId);
 
     const payment = await PaymentService.getPaymentById(paymentId);
 
@@ -113,8 +119,69 @@ const markPaymentAsPaid = async (req: Request, res: Response, next: NextFunction
     return res.status(200).json({
       success: true,
       status: 200,
-      message: "Payment marked as paid successfully",
+      message: "Payment confirm successfully",
       data: updatedPayment,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: unknown) {
+    // console.log("Error marking payment as paid:", error);
+    next(error);
+  }
+};
+
+const markAsPaid = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = req.query.token as string;
+
+    if (!token) {
+      throw new Error("Token is required");
+    }
+
+    const decode = jwt.verify(token, config.jwt_secret) as {
+      subId: string;
+      userId: string;
+    };
+
+    const payment = await PaymentService.getPaymentBySubscriptionId(decode.subId);
+
+    if (!payment) {
+      throw new NotFoundError("Payment not found");
+    }
+
+    const updatedPayment = await PaymentService.updatePaymentStatus(payment.id, "SUCCESS");
+
+    if (!updatedPayment) {
+      throw new Error("Failed to update payment status");
+    }
+
+    return res.status(200).redirect(`${config.frontendUrl}/dashboard/payments`);
+  } catch (error: unknown) {
+    // console.log("Error marking payment as paid:", error);
+    next(error);
+  }
+};
+
+const updatePayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const paymentId = req.params.paymentId;
+    const body = req.body;
+
+    const payment = await PaymentService.getPaymentById(paymentId);
+
+    if (!payment) {
+      throw new NotFoundError("Payment not found");
+    }
+
+    const updatedPayment = await PaymentService.updatePayment(paymentId, body);
+
+    if (!updatedPayment) {
+      throw new Error("Failed to update payment");
+    }
+
+    return res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Payment updated successfully",
       timestamp: new Date().toISOString(),
     });
   } catch (error: unknown) {
@@ -128,7 +195,9 @@ const PaymentController = {
   getAllPayments,
   getUserPayments,
   getPaymentById,
-  markPaymentAsPaid,
+  markAsPaid,
+  confirmPayment,
+  updatePayment,
 };
 
 export default PaymentController;

@@ -8,8 +8,18 @@ export const createPaymentSchema = z.object({
   currency: z.enum(CURRENCIES).default("USD"),
   paymentProvider: z.enum(PAYMENT_PROVIDERS).default("STRIPE"),
   paymentStatus: z.enum(PAYMENT_STATUSES).default("PENDING"),
-  paidAt: z.date().optional(),
+  paidAt: z.coerce.date().optional(),
+  isPaid: z.boolean().optional().default(true),
+});
+
+export const updatePaymentSchema = z.object({
+  amount: z.number().min(1, "Amount is required"),
+  currency: z.enum(CURRENCIES).default("USD"),
+  paymentProvider: z.enum(PAYMENT_PROVIDERS).default("STRIPE"),
+  paymentStatus: z.enum(PAYMENT_STATUSES).default("PENDING"),
+  paidAt: z.coerce.date().optional(),
   isPaid: z.boolean().optional().default(true),
 });
 
 export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
+export type UpdatePaymentInput = z.infer<typeof updatePaymentSchema>;
