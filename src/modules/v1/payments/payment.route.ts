@@ -3,7 +3,7 @@ import PaymentController from "./payment.controller";
 import { authorize } from "../../../middlewares/roleMiddleware";
 import authenticate from "../../../middlewares/authenticate";
 import { validateBody } from "../../../middlewares/validation";
-import { createPaymentSchema } from "./payment.validation";
+import { createPaymentSchema, updatePaymentSchema } from "./payment.validation";
 
 const router = Router();
 
@@ -14,6 +14,9 @@ router.get("/", authorize(["ADMIN"]), PaymentController.getAllPayments);
 
 // Get user's payments
 router.get("/user", authorize(["USER"]), PaymentController.getUserPayments);
+
+// Mark as paid payment
+router.get("/mark-as-paid", authorize(["USER"]), PaymentController.markAsPaid);
 
 // Get payment details
 router.get("/:paymentId", authorize(["USER"]), PaymentController.getPaymentById);
@@ -26,7 +29,15 @@ router.post(
   PaymentController.createPayment
 );
 
-// Mark payment as completed
-router.post("/:paymentId/complete", authorize(["USER"]), PaymentController.markPaymentAsPaid);
+// Update payment
+router.put(
+  "/:paymentId",
+  authorize(["USER"]),
+  validateBody(updatePaymentSchema),
+  PaymentController.updatePayment
+);
+
+// Payment completed
+router.post("/complete", authorize(["USER"]), PaymentController.confirmPayment);
 
 export default router;
