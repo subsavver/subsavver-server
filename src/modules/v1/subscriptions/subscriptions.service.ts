@@ -1,3 +1,4 @@
+import { PAGE_LIMIT } from "../../../constants";
 import { prisma } from "../../../lib/database";
 import { UpdateUserSubscription, UserSubscription } from "./subscriptions.validation";
 
@@ -22,8 +23,16 @@ const getUsersSubscriptions = async () => {
   }
 };
 
-const getUserSubscriptions = async (userId: string) => {
+const getUserSubscriptions = async (userId: string, page: number = 1) => {
   try {
+    const skip = (page - 1) * PAGE_LIMIT;
+
+    const totalSubscriptions = await prisma.userSubscription.count({
+      where: {
+        userId,
+      },
+    });
+
     const subscriptions = await prisma.userSubscription.findMany({
       where: {
         userId,
@@ -40,12 +49,22 @@ const getUserSubscriptions = async (userId: string) => {
           },
         },
       },
+      take: PAGE_LIMIT,
+      skip: skip,
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    return subscriptions;
+    return {
+      data: subscriptions,
+      meta: {
+        total: totalSubscriptions,
+        page,
+        limit: PAGE_LIMIT,
+        totalPages: Math.ceil(totalSubscriptions / PAGE_LIMIT),
+      },
+    };
   } catch (error: unknown) {
     console.log(error);
   }
