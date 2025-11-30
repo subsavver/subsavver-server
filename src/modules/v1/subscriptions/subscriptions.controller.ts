@@ -86,12 +86,16 @@ const createUserSubscription = async (req: Request, res: Response, next: NextFun
 const getUserSubscriptions = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user as User;
+    const { page } = req.query as { page: string };
 
     if (!user) {
       throw new UnauthorizedError("User not authenticated");
     }
 
-    const subscriptions = await SubscriptionsService.getUserSubscriptions(user.id);
+    const subscriptions = await SubscriptionsService.getUserSubscriptions(
+      user.id,
+      Number(page || 1)
+    );
 
     if (!subscriptions) {
       throw new NotFoundError("No subscriptions found");
@@ -101,7 +105,8 @@ const getUserSubscriptions = async (req: Request, res: Response, next: NextFunct
       success: true,
       status: 200,
       message: "Subscriptions fetched successfully",
-      data: subscriptions,
+      data: subscriptions.data,
+      meta: subscriptions.meta,
       timestamp: new Date().toISOString(),
     });
   } catch (error: unknown) {
