@@ -43,6 +43,9 @@ export type UserSubscriptionMinAggregateOutputType = {
   planName: string | null
   amount: number | null
   renewalDate: Date | null
+  currency: $Enums.Currency | null
+  paymentMethod: $Enums.PaymentProvider | null
+  billingCycle: $Enums.BillingCycle | null
   isActive: boolean | null
   notes: string | null
   lastPaymentDate: Date | null
@@ -60,6 +63,9 @@ export type UserSubscriptionMaxAggregateOutputType = {
   planName: string | null
   amount: number | null
   renewalDate: Date | null
+  currency: $Enums.Currency | null
+  paymentMethod: $Enums.PaymentProvider | null
+  billingCycle: $Enums.BillingCycle | null
   isActive: boolean | null
   notes: string | null
   lastPaymentDate: Date | null
@@ -77,6 +83,9 @@ export type UserSubscriptionCountAggregateOutputType = {
   planName: number
   amount: number
   renewalDate: number
+  currency: number
+  paymentMethod: number
+  billingCycle: number
   isActive: number
   notes: number
   lastPaymentDate: number
@@ -106,6 +115,9 @@ export type UserSubscriptionMinAggregateInputType = {
   planName?: true
   amount?: true
   renewalDate?: true
+  currency?: true
+  paymentMethod?: true
+  billingCycle?: true
   isActive?: true
   notes?: true
   lastPaymentDate?: true
@@ -123,6 +135,9 @@ export type UserSubscriptionMaxAggregateInputType = {
   planName?: true
   amount?: true
   renewalDate?: true
+  currency?: true
+  paymentMethod?: true
+  billingCycle?: true
   isActive?: true
   notes?: true
   lastPaymentDate?: true
@@ -140,6 +155,9 @@ export type UserSubscriptionCountAggregateInputType = {
   planName?: true
   amount?: true
   renewalDate?: true
+  currency?: true
+  paymentMethod?: true
+  billingCycle?: true
   isActive?: true
   notes?: true
   lastPaymentDate?: true
@@ -244,6 +262,9 @@ export type UserSubscriptionGroupByOutputType = {
   planName: string | null
   amount: number
   renewalDate: Date
+  currency: $Enums.Currency
+  paymentMethod: $Enums.PaymentProvider
+  billingCycle: $Enums.BillingCycle
   isActive: boolean
   notes: string | null
   lastPaymentDate: Date | null
@@ -284,6 +305,9 @@ export type UserSubscriptionWhereInput = {
   planName?: Prisma.StringNullableFilter<"UserSubscription"> | string | null
   amount?: Prisma.FloatFilter<"UserSubscription"> | number
   renewalDate?: Prisma.DateTimeFilter<"UserSubscription"> | Date | string
+  currency?: Prisma.EnumCurrencyFilter<"UserSubscription"> | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFilter<"UserSubscription"> | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFilter<"UserSubscription"> | $Enums.BillingCycle
   isActive?: Prisma.BoolFilter<"UserSubscription"> | boolean
   notes?: Prisma.StringNullableFilter<"UserSubscription"> | string | null
   lastPaymentDate?: Prisma.DateTimeNullableFilter<"UserSubscription"> | Date | string | null
@@ -307,6 +331,9 @@ export type UserSubscriptionOrderByWithRelationInput = {
   planName?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   renewalDate?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   lastPaymentDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -333,6 +360,9 @@ export type UserSubscriptionWhereUniqueInput = Prisma.AtLeast<{
   planName?: Prisma.StringNullableFilter<"UserSubscription"> | string | null
   amount?: Prisma.FloatFilter<"UserSubscription"> | number
   renewalDate?: Prisma.DateTimeFilter<"UserSubscription"> | Date | string
+  currency?: Prisma.EnumCurrencyFilter<"UserSubscription"> | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFilter<"UserSubscription"> | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFilter<"UserSubscription"> | $Enums.BillingCycle
   isActive?: Prisma.BoolFilter<"UserSubscription"> | boolean
   notes?: Prisma.StringNullableFilter<"UserSubscription"> | string | null
   lastPaymentDate?: Prisma.DateTimeNullableFilter<"UserSubscription"> | Date | string | null
@@ -356,6 +386,9 @@ export type UserSubscriptionOrderByWithAggregationInput = {
   planName?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   renewalDate?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   lastPaymentDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -381,6 +414,9 @@ export type UserSubscriptionScalarWhereWithAggregatesInput = {
   planName?: Prisma.StringNullableWithAggregatesFilter<"UserSubscription"> | string | null
   amount?: Prisma.FloatWithAggregatesFilter<"UserSubscription"> | number
   renewalDate?: Prisma.DateTimeWithAggregatesFilter<"UserSubscription"> | Date | string
+  currency?: Prisma.EnumCurrencyWithAggregatesFilter<"UserSubscription"> | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderWithAggregatesFilter<"UserSubscription"> | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleWithAggregatesFilter<"UserSubscription"> | $Enums.BillingCycle
   isActive?: Prisma.BoolWithAggregatesFilter<"UserSubscription"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"UserSubscription"> | string | null
   lastPaymentDate?: Prisma.DateTimeNullableWithAggregatesFilter<"UserSubscription"> | Date | string | null
@@ -396,6 +432,9 @@ export type UserSubscriptionCreateInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -418,6 +457,9 @@ export type UserSubscriptionUncheckedCreateInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -436,6 +478,9 @@ export type UserSubscriptionUpdateInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -458,6 +503,9 @@ export type UserSubscriptionUncheckedUpdateInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -478,6 +526,9 @@ export type UserSubscriptionCreateManyInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -493,6 +544,9 @@ export type UserSubscriptionUpdateManyMutationInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -509,6 +563,9 @@ export type UserSubscriptionUncheckedUpdateManyInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -536,6 +593,9 @@ export type UserSubscriptionCountOrderByAggregateInput = {
   planName?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   renewalDate?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   lastPaymentDate?: Prisma.SortOrder
@@ -558,6 +618,9 @@ export type UserSubscriptionMaxOrderByAggregateInput = {
   planName?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   renewalDate?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   lastPaymentDate?: Prisma.SortOrder
@@ -575,6 +638,9 @@ export type UserSubscriptionMinOrderByAggregateInput = {
   planName?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   renewalDate?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  billingCycle?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   lastPaymentDate?: Prisma.SortOrder
@@ -687,6 +753,18 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumCurrencyFieldUpdateOperationsInput = {
+  set?: $Enums.Currency
+}
+
+export type EnumPaymentProviderFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentProvider
+}
+
+export type EnumBillingCycleFieldUpdateOperationsInput = {
+  set?: $Enums.BillingCycle
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
@@ -788,6 +866,9 @@ export type UserSubscriptionCreateWithoutCategoryInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -809,6 +890,9 @@ export type UserSubscriptionUncheckedCreateWithoutCategoryInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -857,6 +941,9 @@ export type UserSubscriptionScalarWhereInput = {
   planName?: Prisma.StringNullableFilter<"UserSubscription"> | string | null
   amount?: Prisma.FloatFilter<"UserSubscription"> | number
   renewalDate?: Prisma.DateTimeFilter<"UserSubscription"> | Date | string
+  currency?: Prisma.EnumCurrencyFilter<"UserSubscription"> | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFilter<"UserSubscription"> | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFilter<"UserSubscription"> | $Enums.BillingCycle
   isActive?: Prisma.BoolFilter<"UserSubscription"> | boolean
   notes?: Prisma.StringNullableFilter<"UserSubscription"> | string | null
   lastPaymentDate?: Prisma.DateTimeNullableFilter<"UserSubscription"> | Date | string | null
@@ -872,6 +959,9 @@ export type UserSubscriptionCreateWithoutServiceInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -892,6 +982,9 @@ export type UserSubscriptionUncheckedCreateWithoutServiceInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -936,6 +1029,9 @@ export type UserSubscriptionCreateWithoutRemindersInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -957,6 +1053,9 @@ export type UserSubscriptionUncheckedCreateWithoutRemindersInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -990,6 +1089,9 @@ export type UserSubscriptionUpdateWithoutRemindersInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1011,6 +1113,9 @@ export type UserSubscriptionUncheckedUpdateWithoutRemindersInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1028,6 +1133,9 @@ export type UserSubscriptionCreateWithoutSpendingLogsInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1049,6 +1157,9 @@ export type UserSubscriptionUncheckedCreateWithoutSpendingLogsInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1082,6 +1193,9 @@ export type UserSubscriptionUpdateWithoutSpendingLogsInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1103,6 +1217,9 @@ export type UserSubscriptionUncheckedUpdateWithoutSpendingLogsInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1120,6 +1237,9 @@ export type UserSubscriptionCreateWithoutPaymentInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1141,6 +1261,9 @@ export type UserSubscriptionUncheckedCreateWithoutPaymentInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1174,6 +1297,9 @@ export type UserSubscriptionUpdateWithoutPaymentInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1195,6 +1321,9 @@ export type UserSubscriptionUncheckedUpdateWithoutPaymentInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1212,6 +1341,9 @@ export type UserSubscriptionCreateWithoutUserInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1232,6 +1364,9 @@ export type UserSubscriptionUncheckedCreateWithoutUserInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1278,6 +1413,9 @@ export type UserSubscriptionCreateManyCategoryInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1292,6 +1430,9 @@ export type UserSubscriptionUpdateWithoutCategoryInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1313,6 +1454,9 @@ export type UserSubscriptionUncheckedUpdateWithoutCategoryInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1332,6 +1476,9 @@ export type UserSubscriptionUncheckedUpdateManyWithoutCategoryInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1347,6 +1494,9 @@ export type UserSubscriptionCreateManyServiceInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1362,6 +1512,9 @@ export type UserSubscriptionUpdateWithoutServiceInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1382,6 +1535,9 @@ export type UserSubscriptionUncheckedUpdateWithoutServiceInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1401,6 +1557,9 @@ export type UserSubscriptionUncheckedUpdateManyWithoutServiceInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1417,6 +1576,9 @@ export type UserSubscriptionCreateManyUserInput = {
   planName?: string | null
   amount: number
   renewalDate: Date | string
+  currency?: $Enums.Currency
+  paymentMethod?: $Enums.PaymentProvider
+  billingCycle?: $Enums.BillingCycle
   isActive?: boolean
   notes?: string | null
   lastPaymentDate?: Date | string | null
@@ -1432,6 +1594,9 @@ export type UserSubscriptionUpdateWithoutUserInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1452,6 +1617,9 @@ export type UserSubscriptionUncheckedUpdateWithoutUserInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1471,6 +1639,9 @@ export type UserSubscriptionUncheckedUpdateManyWithoutUserInput = {
   planName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   renewalDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  currency?: Prisma.EnumCurrencyFieldUpdateOperationsInput | $Enums.Currency
+  paymentMethod?: Prisma.EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+  billingCycle?: Prisma.EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastPaymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1537,6 +1708,9 @@ export type UserSubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   planName?: boolean
   amount?: boolean
   renewalDate?: boolean
+  currency?: boolean
+  paymentMethod?: boolean
+  billingCycle?: boolean
   isActive?: boolean
   notes?: boolean
   lastPaymentDate?: boolean
@@ -1561,6 +1735,9 @@ export type UserSubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   planName?: boolean
   amount?: boolean
   renewalDate?: boolean
+  currency?: boolean
+  paymentMethod?: boolean
+  billingCycle?: boolean
   isActive?: boolean
   notes?: boolean
   lastPaymentDate?: boolean
@@ -1581,6 +1758,9 @@ export type UserSubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   planName?: boolean
   amount?: boolean
   renewalDate?: boolean
+  currency?: boolean
+  paymentMethod?: boolean
+  billingCycle?: boolean
   isActive?: boolean
   notes?: boolean
   lastPaymentDate?: boolean
@@ -1601,6 +1781,9 @@ export type UserSubscriptionSelectScalar = {
   planName?: boolean
   amount?: boolean
   renewalDate?: boolean
+  currency?: boolean
+  paymentMethod?: boolean
+  billingCycle?: boolean
   isActive?: boolean
   notes?: boolean
   lastPaymentDate?: boolean
@@ -1611,7 +1794,7 @@ export type UserSubscriptionSelectScalar = {
   remindBeforeDays?: boolean
 }
 
-export type UserSubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "serviceId" | "planName" | "amount" | "renewalDate" | "isActive" | "notes" | "lastPaymentDate" | "nextPaymentDate" | "createdAt" | "updatedAt" | "categoryId" | "remindBeforeDays", ExtArgs["result"]["userSubscription"]>
+export type UserSubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "serviceId" | "planName" | "amount" | "renewalDate" | "currency" | "paymentMethod" | "billingCycle" | "isActive" | "notes" | "lastPaymentDate" | "nextPaymentDate" | "createdAt" | "updatedAt" | "categoryId" | "remindBeforeDays", ExtArgs["result"]["userSubscription"]>
 export type UserSubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   payment?: boolean | Prisma.UserSubscription$paymentArgs<ExtArgs>
   reminders?: boolean | Prisma.UserSubscription$remindersArgs<ExtArgs>
@@ -1649,6 +1832,9 @@ export type $UserSubscriptionPayload<ExtArgs extends runtime.Types.Extensions.In
     planName: string | null
     amount: number
     renewalDate: Date
+    currency: $Enums.Currency
+    paymentMethod: $Enums.PaymentProvider
+    billingCycle: $Enums.BillingCycle
     isActive: boolean
     notes: string | null
     lastPaymentDate: Date | null
@@ -2092,6 +2278,9 @@ export interface UserSubscriptionFieldRefs {
   readonly planName: Prisma.FieldRef<"UserSubscription", 'String'>
   readonly amount: Prisma.FieldRef<"UserSubscription", 'Float'>
   readonly renewalDate: Prisma.FieldRef<"UserSubscription", 'DateTime'>
+  readonly currency: Prisma.FieldRef<"UserSubscription", 'Currency'>
+  readonly paymentMethod: Prisma.FieldRef<"UserSubscription", 'PaymentProvider'>
+  readonly billingCycle: Prisma.FieldRef<"UserSubscription", 'BillingCycle'>
   readonly isActive: Prisma.FieldRef<"UserSubscription", 'Boolean'>
   readonly notes: Prisma.FieldRef<"UserSubscription", 'String'>
   readonly lastPaymentDate: Prisma.FieldRef<"UserSubscription", 'DateTime'>

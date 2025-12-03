@@ -48,7 +48,6 @@ cron.schedule("*/10 * * * *", async () => {
             userId: subscription.userId,
             subscriptionId: subscription.id,
             amount: subscription.amount,
-            currency: "USD",
             paymentStatus: "PENDING",
           },
         });

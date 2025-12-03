@@ -58,6 +58,9 @@ model UserSubscription {
   planName         String?
   amount           Float
   renewalDate      DateTime
+  currency         Currency            @default(USD)
+  paymentMethod    PaymentProvider     @default(STRIPE)
+  billingCycle     BillingCycle        @default(MONTHLY)
   isActive         Boolean             @default(true)
   notes            String?
   lastPaymentDate  DateTime?
@@ -117,18 +120,16 @@ model UserAnalytics {
 }
 
 model Payment {
-  id              String           @id @default(uuid())
-  subscriptionId  String
-  userId          String
-  amount          Float
-  currency        Currency         @default(USD)
-  paymentStatus   PaymentStatus    @default(PENDING)
-  paymentProvider PaymentProvider  @default(STRIPE)
-  isPaid          Boolean          @default(false)
-  paidAt          DateTime?
-  createdAt       DateTime         @default(now())
-  subscription    UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid())
+  subscriptionId String
+  userId         String
+  amount         Float
+  paymentStatus  PaymentStatus    @default(PENDING)
+  isPaid         Boolean          @default(false)
+  paidAt         DateTime?
+  createdAt      DateTime         @default(now())
+  subscription   UserSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("payment")
 }
