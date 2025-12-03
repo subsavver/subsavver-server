@@ -72,6 +72,8 @@ const getUserPayments = async (userId: string, page: number = 1) => {
           select: {
             id: true,
             planName: true,
+            currency: true,
+            paymentMethod: true,
           },
         },
       },

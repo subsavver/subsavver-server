@@ -1,4 +1,5 @@
 import { PAGE_LIMIT } from "../../../constants";
+import { BillingCycle, Currency, PaymentProvider } from "../../../generated/enums";
 import { prisma } from "../../../lib/database";
 import { UpdateUserSubscription, UserSubscription } from "./subscriptions.validation";
 
@@ -75,6 +76,9 @@ const createUserSubscription = async (body: UserSubscription, userId: string) =>
     const createdSubscription = await prisma.userSubscription.create({
       data: {
         ...body,
+        currency: body.currency as Currency,
+        paymentMethod: body.paymentMethod as PaymentProvider,
+        billingCycle: body.billingCycle as BillingCycle,
         remindBeforeDays: Number(body.remindBeforeDays),
         userId,
       },
@@ -99,6 +103,9 @@ const updateUserSubscription = async (
       },
       data: {
         ...data,
+        currency: data.currency as Currency,
+        paymentMethod: data.paymentMethod as PaymentProvider,
+        billingCycle: data.billingCycle as BillingCycle,
         remindBeforeDays: Number(data.remindBeforeDays),
       },
       include: {
