@@ -85,7 +85,105 @@ const getChartData = async (userId: string) => {
   return chartData;
 };
 
-export const DashboardService = {
+const getCategorySpend = async (userId: string) => {
+  const subscriptions = await prisma.userSubscription.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  const categorySpend = subscriptions.reduce(
+    (acc, sub) => {
+      if (sub.category) {
+        acc.push({
+          name: sub.category.name,
+          amount: sub.amount,
+        });
+      }
+      return acc;
+    },
+    [] as { name: string; amount: number }[]
+  );
+
+  return categorySpend;
+};
+
+const getSpendingTrend = async (userId: string) => {
+  const now = new Date();
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+  const result = await prisma.$queryRaw`
+    SELECT
+      EXTRACT(YEAR FROM "paidAt") AS year,
+      EXTRACT(MONTH FROM "paidAt") AS month,
+      SUM("amount") AS total
+    FROM "payment"
+    WHERE "userId" = ${userId}
+      AND "isPaid" = true
+      AND "paidAt" >= ${sixMonthsAgo}
+    GROUP BY year, month
+    ORDER BY year, month;
+  `;
+
+  return result;
+};
+
+const getProjection = async (userId: string) => {
+  const subscriptions = await prisma.userSubscription.findMany({
+    where: {
+      userId,
+      isActive: true,
+    },
+  });
+
+  const monthly = subscriptions.reduce(
+    (acc, sub) => {
+      const month = sub.renewalDate.getMonth();
+      acc[month] = (acc[month] || 0) + sub.amount;
+      return acc;
+    },
+    {} as Record<number, number>
+  );
+
+  const yearly = subscriptions.reduce(
+    (acc, sub) => {
+      const year = sub.renewalDate.getFullYear();
+      acc[year] = (acc[year] || 0) + sub.amount;
+      return acc;
+    },
+    {} as Record<number, number>
+  );
+
+  return {
+    monthly,
+    yearly,
+  };
+};
+
+const getTopExpenses = async (userId: string) => {
+  const subscriptions = await prisma.userSubscription.findMany({
+    where: {
+      userId,
+      isActive: true,
+    },
+    orderBy: {
+      amount: "desc",
+    },
+    take: 3,
+  });
+
+  return subscriptions;
+};
+
+export const AnalyticsService = {
   getStats,
   getChartData,
+  getCategorySpend,
+  getSpendingTrend,
+  getProjection,
+  getTopExpenses,
 };

@@ -5,7 +5,7 @@ import paymentsRoute from "../modules/v1/payments/payment.route";
 import categoriesRoute from "../modules/v1/category/category.route";
 import planRoute from "../modules/v1/plan/plan.route";
 import usersRoute from "../modules/v1/users/users.route";
-import dashboardRoute from "../modules/v1/dashboard/dashboard.routes";
+import analyticsRoute from "../modules/v1/analytics/analytics.routes";
 
 const router: Router = Router();
 
@@ -25,7 +25,7 @@ const apiVersions = {
     },
     {
       path: "/analytics",
-      handler: dashboardRoute,
+      handler: analyticsRoute,
     },
     {
       path: "/users",
