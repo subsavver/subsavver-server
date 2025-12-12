@@ -81,6 +81,9 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "subsavver",
+    defaultCookieAttributes: {
+      sameSite: "none",
+    },
   },
   user: {
     additionalFields: {
