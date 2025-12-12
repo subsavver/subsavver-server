@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 
-app.use(authenticate);
+// app.use(authenticate);
 
 // Routes
 app.get("/", (req, res) => {
