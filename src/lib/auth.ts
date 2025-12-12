@@ -81,6 +81,10 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "subsavver",
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: "subsavver.com",
+    },
     cookies: {
       session_token: {
         attributes: {
