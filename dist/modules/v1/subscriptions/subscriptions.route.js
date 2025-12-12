@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const subscriptions_controller_1 = __importDefault(require("./subscriptions.controller"));
+const authenticate_1 = __importDefault(require("../../../middlewares/authenticate"));
+const roleMiddleware_1 = require("../../../middlewares/roleMiddleware");
+const validation_1 = require("../../../middlewares/validation");
+const subscriptions_validation_1 = require("./subscriptions.validation");
+const router = (0, express_1.Router)();
+router.use(authenticate_1.default);
+router.get("/", (0, roleMiddleware_1.authorize)(["ADMIN"]), subscriptions_controller_1.default.getAllUserSubscriptions);
+router.get("/user", (0, roleMiddleware_1.authorize)(["USER"]), subscriptions_controller_1.default.getUserSubscriptions);
+router.get("/:id", (0, roleMiddleware_1.authorize)(["USER"]), subscriptions_controller_1.default.getUserSubscriptionById);
+router.post("/", (0, roleMiddleware_1.authorize)(["USER"]), (0, roleMiddleware_1.checkSubscriptionLimit)(), (0, validation_1.validateBody)(subscriptions_validation_1.userSubscriptionSchema), subscriptions_controller_1.default.createUserSubscription);
+router.patch("/:id", (0, roleMiddleware_1.authorize)(["USER"]), (0, validation_1.validateBody)(subscriptions_validation_1.updateUserSubscriptionSchema), subscriptions_controller_1.default.updateUserSubscription);
+router.delete("/:id", (0, roleMiddleware_1.authorize)(["USER"]), subscriptions_controller_1.default.deleteUserSubscription);
+exports.default = router;
