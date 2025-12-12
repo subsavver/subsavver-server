@@ -23,7 +23,7 @@ export const auth = betterAuth({
       scope: ["email", "public_profile"],
     },
   },
-  trustedOrigins: [process.env.FRONTEND_URL as string, process.env.BACKEND_URL as string],
+  trustedOrigins: [process.env.FRONTEND_URL as string, "http://localhost:3000"],
   plugins: [
     admin({
       defaultRole: "user",
@@ -81,6 +81,15 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "subsavver",
+    cookies: {
+      session_token: {
+        attributes: {
+          sameSite: "none",
+          secure: true,
+          httpOnly: true,
+        },
+      },
+    },
   },
   user: {
     additionalFields: {
