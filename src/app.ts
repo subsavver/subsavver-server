@@ -5,12 +5,11 @@ import { auth } from "./lib/auth";
 import { User } from "./typescript";
 import config from "./config/config";
 import routes from "./routes";
-import authenticate from "./middlewares/authenticate";
+import { trustedOrigins } from "./constants";
 import { errorHandler } from "./utils/errorHandler";
 import "./jobs/payment.cron";
 import "./jobs/reminder.cron";
 import "./workers/reminder.worker";
-import { trustedOrigins } from "./constants";
 
 declare global {
   namespace Express {
@@ -34,8 +33,6 @@ app.use(
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// app.use(authenticate);
 
 // Routes
 app.get("/", (req, res) => {

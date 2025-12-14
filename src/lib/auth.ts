@@ -2,6 +2,8 @@ import { betterAuth } from "better-auth";
 import { admin, customSession } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./database";
+import config from "../config/config";
+import { trustedOrigins } from "../constants";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -23,12 +25,7 @@ export const auth = betterAuth({
       scope: ["email", "public_profile"],
     },
   },
-  trustedOrigins: [
-    "https://www.subsavver.com",
-    "https://subsavver.com",
-    "https://api.subsavver.com",
-    "http://localhost:3000",
-  ],
+  trustedOrigins: trustedOrigins,
   plugins: [
     admin({
       defaultRole: "user",
@@ -88,7 +85,7 @@ export const auth = betterAuth({
     cookiePrefix: "subsavver",
     crossSubDomainCookies: {
       enabled: true,
-      domain: ".subsavver.com",
+      domain: config.isProduction ? ".subsavver.com" : "localhost",
     },
     cookies: {
       session_token: {
