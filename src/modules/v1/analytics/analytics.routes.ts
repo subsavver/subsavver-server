@@ -2,8 +2,11 @@ import express from "express";
 import { AnalyticsController } from "./analytics.controller";
 import { UserRole } from "../../../generated/client";
 import { authorize } from "../../../middlewares/roleMiddleware";
+import authenticate from "../../../middlewares/authenticate";
 
 const router = express.Router();
+
+router.use(authenticate);
 
 router.get(
   "/overview",

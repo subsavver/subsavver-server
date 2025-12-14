@@ -37,8 +37,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // app.use(authenticate);
 
-console.log(process.env.FRONTEND_URL);
-
 // Routes
 app.get("/", (req, res) => {
   res.send("SubSavver API!");

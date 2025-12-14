@@ -3,8 +3,11 @@ import { authorize } from "../../../middlewares/roleMiddleware";
 import CategoryController from "./category.controller";
 import { validateBody } from "../../../middlewares/validation";
 import { createCategorySchema } from "./category.validation";
+import authenticate from "../../../middlewares/authenticate";
 
 const router: Router = Router();
+
+router.use(authenticate);
 
 router.get("/", CategoryController.getCategories);
 

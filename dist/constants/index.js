@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CURRENCIES = exports.PAYMENT_STATUSES = exports.PAYMENT_PROVIDERS = exports.PAGE_LIMIT = exports.REMIND_BEFORE_DAYS = void 0;
+exports.trustedOrigins = exports.CURRENCIES = exports.PAYMENT_STATUSES = exports.PAYMENT_PROVIDERS = exports.PAGE_LIMIT = exports.REMIND_BEFORE_DAYS = void 0;
 exports.REMIND_BEFORE_DAYS = 3; // Default reminder days before renewal date
 exports.PAGE_LIMIT = 10;
 exports.PAYMENT_PROVIDERS = [
@@ -42,4 +42,10 @@ exports.CURRENCIES = [
     "AED",
     "SAR",
     "BDT",
+];
+exports.trustedOrigins = [
+    "https://www.subsavver.com",
+    "https://subsavver.com",
+    "https://api.subsavver.com",
+    "http://localhost:3000",
 ];
