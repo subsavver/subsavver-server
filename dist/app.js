@@ -13,11 +13,12 @@ const errorHandler_1 = require("./utils/errorHandler");
 require("./jobs/payment.cron");
 require("./jobs/reminder.cron");
 require("./workers/reminder.worker");
+const constants_1 = require("./constants");
 const app = (0, express_1.default)();
 // Middlewares
 app.set("trust proxy", 1);
 app.use((0, cors_1.default)({
-    origin: [process.env.FRONTEND_URL, "http://localhost:3000"],
+    origin: constants_1.trustedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));

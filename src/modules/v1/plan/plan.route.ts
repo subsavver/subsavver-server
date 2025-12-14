@@ -3,8 +3,11 @@ import PlanController from "./plan.controller";
 import { authorize } from "../../../middlewares/roleMiddleware";
 import { validateBody } from "../../../middlewares/validation";
 import { createPlanSchema, updatePlanSchema } from "./plan.validation";
+import authenticate from "../../../middlewares/authenticate";
 
 const router: Router = Router();
+
+router.use(authenticate);
 
 // Get all plans
 router.get("/", PlanController.getPlans);
