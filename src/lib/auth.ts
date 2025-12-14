@@ -23,7 +23,12 @@ export const auth = betterAuth({
       scope: ["email", "public_profile"],
     },
   },
-  trustedOrigins: [process.env.FRONTEND_URL as string, "http://localhost:3000"],
+  trustedOrigins: [
+    "https://www.subsavver.com",
+    "https://subsavver.com",
+    "https://api.subsavver.com",
+    "http://localhost:3000",
+  ],
   plugins: [
     admin({
       defaultRole: "user",
@@ -83,7 +88,7 @@ export const auth = betterAuth({
     cookiePrefix: "subsavver",
     crossSubDomainCookies: {
       enabled: true,
-      domain: "subsavver.com",
+      domain: ".subsavver.com",
     },
     cookies: {
       session_token: {
