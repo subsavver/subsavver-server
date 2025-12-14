@@ -30,11 +30,13 @@ app.use(
     credentials: true,
   })
 );
+app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 // app.use(authenticate);
+
+console.log(process.env.FRONTEND_URL);
 
 // Routes
 app.get("/", (req, res) => {
