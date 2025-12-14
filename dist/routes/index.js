@@ -10,7 +10,7 @@ const payment_route_1 = __importDefault(require("../modules/v1/payments/payment.
 const category_route_1 = __importDefault(require("../modules/v1/category/category.route"));
 const plan_route_1 = __importDefault(require("../modules/v1/plan/plan.route"));
 const users_route_1 = __importDefault(require("../modules/v1/users/users.route"));
-const dashboard_routes_1 = __importDefault(require("../modules/v1/dashboard/dashboard.routes"));
+const analytics_routes_1 = __importDefault(require("../modules/v1/analytics/analytics.routes"));
 const router = (0, express_1.Router)();
 const apiVersions = {
     v1: [
@@ -28,7 +28,7 @@ const apiVersions = {
         },
         {
             path: "/analytics",
-            handler: dashboard_routes_1.default,
+            handler: analytics_routes_1.default,
         },
         {
             path: "/users",

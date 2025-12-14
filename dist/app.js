@@ -9,22 +9,23 @@ const node_1 = require("better-auth/node");
 const auth_1 = require("./lib/auth");
 const config_1 = __importDefault(require("./config/config"));
 const routes_1 = __importDefault(require("./routes"));
-const authenticate_1 = __importDefault(require("./middlewares/authenticate"));
 const errorHandler_1 = require("./utils/errorHandler");
 require("./jobs/payment.cron");
 require("./jobs/reminder.cron");
 require("./workers/reminder.worker");
 const app = (0, express_1.default)();
 // Middlewares
+app.set("trust proxy", 1);
 app.use((0, cors_1.default)({
-    origin: [process.env.FRONTEND_URL, "http://192.168.0.103:3000"],
+    origin: [process.env.FRONTEND_URL, "http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));
+app.all("/api/auth/*splat", (0, node_1.toNodeHandler)(auth_1.auth));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.all("/api/auth/{*any}", (0, node_1.toNodeHandler)(auth_1.auth));
-app.use(authenticate_1.default);
+// app.use(authenticate);
+console.log(process.env.FRONTEND_URL);
 // Routes
 app.get("/", (req, res) => {
     res.send("SubSavver API!");
