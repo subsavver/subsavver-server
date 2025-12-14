@@ -13,7 +13,24 @@ exports.auth = (0, better_auth_1.betterAuth)({
         enabled: true,
         autoSignIn: false,
     },
-    trustedOrigins: [process.env.FRONTEND_URL, "http://192.168.0.103:3000"],
+    socialProviders: {
+        google: {
+            prompt: "select_account",
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        },
+        facebook: {
+            clientId: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+            scope: ["email", "public_profile"],
+        },
+    },
+    trustedOrigins: [
+        "https://www.subsavver.com",
+        "https://subsavver.com",
+        "https://api.subsavver.com",
+        "http://localhost:3000",
+    ],
     plugins: [
         (0, plugins_1.admin)({
             defaultRole: "user",
@@ -69,6 +86,24 @@ exports.auth = (0, better_auth_1.betterAuth)({
     },
     advanced: {
         cookiePrefix: "subsavver",
+        crossSubDomainCookies: {
+            enabled: true,
+            domain: ".subsavver.com",
+        },
+        cookies: {
+            session_token: {
+                attributes: {
+                    sameSite: "none",
+                    secure: true,
+                    httpOnly: true,
+                },
+            },
+        },
+        defaultCookieAttributes: {
+            sameSite: "none",
+            secure: true,
+            httpOnly: true,
+        },
     },
     user: {
         additionalFields: {

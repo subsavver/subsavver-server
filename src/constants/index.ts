@@ -40,3 +40,10 @@ export const CURRENCIES = [
   "SAR",
   "BDT",
 ] as const;
+
+export const trustedOrigins = [
+  "https://www.subsavver.com",
+  "https://subsavver.com",
+  "https://api.subsavver.com",
+  "http://localhost:3000",
+];

@@ -10,6 +10,7 @@ import { errorHandler } from "./utils/errorHandler";
 import "./jobs/payment.cron";
 import "./jobs/reminder.cron";
 import "./workers/reminder.worker";
+import { trustedOrigins } from "./constants";
 
 declare global {
   namespace Express {
@@ -25,7 +26,7 @@ const app: Express = express();
 app.set("trust proxy", 1);
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL as string, "http://localhost:3000"],
+    origin: trustedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
