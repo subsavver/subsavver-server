@@ -10,6 +10,7 @@ import { errorHandler } from "./utils/errorHandler";
 import "./jobs/payment.cron";
 import "./jobs/reminder.cron";
 import "./workers/reminder.worker";
+import authenticate from "./middlewares/authenticate";
 
 declare global {
   namespace Express {
@@ -33,6 +34,8 @@ app.use(
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(authenticate);
 
 // Routes
 app.get("/", (req, res) => {

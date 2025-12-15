@@ -1,10 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const better_auth_1 = require("better-auth");
 const plugins_1 = require("better-auth/plugins");
 const prisma_1 = require("better-auth/adapters/prisma");
 const database_1 = require("./database");
+const config_1 = __importDefault(require("../config/config"));
+const constants_1 = require("../constants");
 exports.auth = (0, better_auth_1.betterAuth)({
     database: (0, prisma_1.prismaAdapter)(database_1.prisma, {
         provider: "postgresql",
@@ -25,12 +30,7 @@ exports.auth = (0, better_auth_1.betterAuth)({
             scope: ["email", "public_profile"],
         },
     },
-    trustedOrigins: [
-        "https://www.subsavver.com",
-        "https://subsavver.com",
-        "https://api.subsavver.com",
-        "http://localhost:3000",
-    ],
+    trustedOrigins: constants_1.trustedOrigins,
     plugins: [
         (0, plugins_1.admin)({
             defaultRole: "user",
@@ -88,7 +88,7 @@ exports.auth = (0, better_auth_1.betterAuth)({
         cookiePrefix: "subsavver",
         crossSubDomainCookies: {
             enabled: true,
-            domain: ".subsavver.com",
+            domain: config_1.default.isProduction ? ".subsavver.com" : "localhost",
         },
         cookies: {
             session_token: {
