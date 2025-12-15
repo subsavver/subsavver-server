@@ -8,7 +8,9 @@ const plan_controller_1 = __importDefault(require("./plan.controller"));
 const roleMiddleware_1 = require("../../../middlewares/roleMiddleware");
 const validation_1 = require("../../../middlewares/validation");
 const plan_validation_1 = require("./plan.validation");
+const authenticate_1 = __importDefault(require("../../../middlewares/authenticate"));
 const router = (0, express_1.Router)();
+router.use(authenticate_1.default);
 // Get all plans
 router.get("/", plan_controller_1.default.getPlans);
 // Create plan
